@@ -1,0 +1,48 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* This file is for your main application CSS */
+
+html,
+body {
+  margin: 0;
+  font-family: sans-serif;
+  height: 100%;
+}
+
+.my-container{
+  min-height: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+}
+
+.sidebar {
+  overflow-x: hidden;
+  transition: width 1s;
+  width: 12%;
+}
+
+#content {
+  flex-grow: 1;
+}
+
+.hide-me {
+  width: 0;
+}
+
+select {
+  width: auto;
+}
+
+.sticky {
+    position: sticky; top: 0;
+}
+

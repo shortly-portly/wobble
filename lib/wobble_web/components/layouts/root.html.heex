@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title suffix=" · Phoenix Framework">
+      <%= assigns[:page_title] || "Wobble" %>
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+    </script>
+  </head>
+  <body class="bg-white antialiased">
+    <div class="my-container">
+      <header class="px-4 sm:px-6 lg:px-8 sticky bg-white shadow">
+        <div class="flex items-center justify-between border-b border-black-200 py-3">
+          <div class="flex items-center gap-4">
+            <div class="flex flex-col">
+              <div class="p-2">Hello</div>
+              <.button id="hide">Menu</.button>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            Sage
+          </div>
+          <div class="flex items-center gap-4">
+            User Details
+          </div>
+        </div>
+      </header>
+      <div class="main">
+        <.sidebar />
+        <div id="content">
+          <div class="container">
+          <%= @inner_content %>
+          </div>
+        </div>
+      </div>
+      <div class="flex place-content-center">
+        <footer class="border-t border-black-200">footer</footer>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.querySelector('#hide').addEventListener('click', function () {
+      document.getElementById('left').classList.toggle("hide-me");
+    });
+  </script>
+</html>
