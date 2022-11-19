@@ -12,6 +12,57 @@
     </script>
   </head>
   <body class="bg-white antialiased">
-    <%= @inner_content %>
+    <div class="my-container">
+      <header class="px-4 sm:px-6 lg:px-8 sticky bg-white shadow">
+        <div class="flex items-center justify-between border-b border-black-200 py-3">
+          <div class="flex items-center gap-4">
+            <div class="flex flex-col">
+              <div class="p-2">Hello</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            Sage
+          </div>
+          <div class="flex items-center gap-4">
+            <ul>
+              <%= if @current_user do %>
+                <li>
+                  <%= @current_user.email %>
+                </li>
+                <li>
+                  <.link href={~p"/users/settings"}>Settings</.link>
+                </li>
+                <li>
+                  <.link href={~p"/users/log_out"} method="delete">Log out</.link>
+                </li>
+              <% else %>
+                <li>
+                  <.link href={~p"/users/register"}>Register</.link>
+                </li>
+                <li>
+                  <.link href={~p"/users/log_in"}>Log in</.link>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="main">
+        <div id="content">
+          <div class="flex items-center justify-center">
+            <%= @inner_content %>
+          </div>
+        </div>
+      </div>
+      <div class="flex place-content-center">
+        <footer class="border-t border-black-200">footer</footer>
+      </div>
+    </div>
   </body>
+  <script>
+    document.querySelector('#hide').addEventListener('click', function () {
+      document.getElementById('left').classList.toggle("hide-me");
+    });
+  </script>
 </html>
+

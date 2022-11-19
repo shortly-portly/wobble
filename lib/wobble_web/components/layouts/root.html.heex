@@ -25,7 +25,26 @@
             Sage
           </div>
           <div class="flex items-center gap-4">
-            User Details
+            <ul>
+              <%= if @current_user do %>
+                <li>
+                  <%= @current_user.email %>
+                </li>
+                <li>
+                  <.link href={~p"/users/settings"}>Settings</.link>
+                </li>
+                <li>
+                  <.link href={~p"/users/log_out"} method="delete">Log out</.link>
+                </li>
+              <% else %>
+                <li>
+                  <.link href={~p"/users/register"}>Register</.link>
+                </li>
+                <li>
+                  <.link href={~p"/users/log_in"}>Log in</.link>
+                </li>
+              <% end %>
+            </ul>
           </div>
         </div>
       </header>
@@ -33,7 +52,7 @@
         <.sidebar />
         <div id="content">
           <div class="container">
-          <%= @inner_content %>
+            <%= @inner_content %>
           </div>
         </div>
       </div>
