@@ -1,5 +1,5 @@
 defmodule WobbleWeb.UserLoginLive do
-  use WobbleWeb, :live_view
+  use WobbleWeb, :auth_live_view
 
   def render(assigns) do
     ~H"""

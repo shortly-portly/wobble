@@ -15,7 +15,7 @@ defmodule WobbleWeb.Router do
   end
 
   pipeline :simple_layout do 
-    plug(:put_root_layout, {WobbleWeb.Layouts, :bare})
+    plug(:put_root_layout, {WobbleWeb.Layouts, :authroot})
   end
 
   pipeline :api do

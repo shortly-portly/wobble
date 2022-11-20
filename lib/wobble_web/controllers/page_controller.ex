@@ -5,7 +5,6 @@ defmodule WobbleWeb.PageController do
     # The home page is often custom made,
     # so skip the default app layout.
     conn
-    |> put_root_layout("bare.html")
     |> render(:home)
   end
 end
