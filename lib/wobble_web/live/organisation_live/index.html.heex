@@ -1,0 +1,39 @@
+<.header>
+  Listing Organisation
+  <:actions>
+    <.link patch={~p"/organisation/new"}>
+      <.button>New Organisation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="organisation" rows={@organisation_collection} row_click={&JS.navigate(~p"/organisation/#{&1}")}>
+  <:col :let={organisation} label="Name"><%= organisation.name %></:col>
+  <:action :let={organisation}>
+    <div class="sr-only">
+      <.link navigate={~p"/organisation/#{organisation}"}>Show</.link>
+    </div>
+    <.link patch={~p"/organisation/#{organisation}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={organisation}>
+    <.link phx-click={JS.push("delete", value: %{id: organisation.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="organisation-modal"
+  show
+  on_cancel={JS.navigate(~p"/organisation")}
+>
+  <.live_component
+    module={WobbleWeb.OrganisationLive.FormComponent}
+    id={@organisation.id || :new}
+    title={@page_title}
+    action={@live_action}
+    organisation={@organisation}
+    navigate={~p"/organisation"}
+  />
+</.modal>

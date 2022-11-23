@@ -14,6 +14,14 @@ defmodule Wobble.AccountsFixtures do
     })
   end
 
+  def valid_organisation_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      email: unique_user_email(),
+      password: valid_user_password(),
+      organisation: %{"name" => "Bed Co"}
+    })
+  end
+
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs

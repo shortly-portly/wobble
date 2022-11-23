@@ -31,6 +31,7 @@ defmodule WobbleWeb.UserRegistrationLiveTest do
         |> render_change(user: %{"email" => "with spaces", "password" => "too short"})
 
       assert result =~ "Register"
+      assert result =~ "be blank"
       assert result =~ "must have the @ sign and no spaces"
       assert result =~ "should be at least 12 character"
     end
@@ -41,7 +42,7 @@ defmodule WobbleWeb.UserRegistrationLiveTest do
       {:ok, lv, _html} = live(conn, ~p"/users/register")
 
       email = unique_user_email()
-      form = form(lv, "#registration_form", user: valid_user_attributes(email: email))
+      form = form(lv, "#registration_form", user: valid_organisation_attributes(email: email))
       render_submit(form)
       conn = follow_trigger_action(form, conn)
 

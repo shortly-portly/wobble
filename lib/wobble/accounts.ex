@@ -4,8 +4,9 @@ defmodule Wobble.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Wobble.Repo
 
+  alias Ecto.Multi
+  alias Wobble.Repo
   alias Wobble.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
@@ -81,6 +82,24 @@ defmodule Wobble.Accounts do
   end
 
   @doc """
+  Registers an organisation which consists of the organisation details and an initial user.
+  Create a default role of "Admin" for the organisation.
+
+  ## Examples
+
+      iex> register_organisation(%{field: value})
+      {:ok, %User{}}
+
+      iex> register_organisation(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+  """
+  def register_organisation(attrs) do
+    %User{}
+    |> User.organisation_registration_changeset(attrs)
+    |> Repo.insert()
+ end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
 
   ## Examples
@@ -91,6 +110,19 @@ defmodule Wobble.Accounts do
   """
   def change_user_registration(%User{} = user, attrs \\ %{}) do
     User.registration_changeset(user, attrs, hash_password: false, validate_email: false)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking organisation changes.
+
+  ## Examples
+
+      iex> change_organisation_registration(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_organisation_registration(%User{} = user, attrs \\ %{}) do
+    User.organisation_registration_changeset(user, attrs, hash_password: false, validate_email: false)
   end
 
   ## Settings

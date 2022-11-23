@@ -8,6 +8,8 @@ defmodule Wobble.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
+    belongs_to :organisation, Wobble.Organisations.Organisation
+
     timestamps()
   end
 
@@ -39,6 +41,21 @@ defmodule Wobble.Accounts.User do
     |> cast(attrs, [:email, :password])
     |> validate_email(opts)
     |> validate_password(opts)
+  end
+
+  @doc """
+  A user changeset for registering an organisation.
+
+  """
+  def organisation_registration_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email, :password])
+    |> validate_email(opts)
+    |> validate_password(opts)
+    |> cast_assoc(:organisation,
+      with: &Wobble.Organisations.Organisation.changeset/2,
+      required: true
+    )
   end
 
   defp validate_email(changeset, opts) do

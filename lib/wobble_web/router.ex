@@ -10,11 +10,11 @@ defmodule WobbleWeb.Router do
     plug(:put_root_layout, {WobbleWeb.Layouts, :root})
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
-    plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug(:put_secure_browser_headers)
+    plug(:fetch_current_user)
   end
 
-  pipeline :simple_layout do 
+  pipeline :simple_layout do
     plug(:put_root_layout, {WobbleWeb.Layouts, :authroot})
   end
 
@@ -33,7 +33,14 @@ defmodule WobbleWeb.Router do
 
     live("/companies/:id", CompanyLive.Show, :show)
     live("/companies/:id/show/edit", CompanyLive.Show, :edit)
-    live "/simple", SimpleForm
+    live("/simple", SimpleForm)
+
+    live("/organisation", OrganisationLive.Index, :index)
+    live("/organisation/new", OrganisationLive.Index, :new)
+    live("/organisation/:id/edit", OrganisationLive.Index, :edit)
+
+    live("/organisation/:id", OrganisationLive.Show, :show)
+    live("/organisation/:id/show/edit", OrganisationLive.Show, :edit)
   end
 
   # Other scopes may use custom stacks.
@@ -61,38 +68,38 @@ defmodule WobbleWeb.Router do
   ## Authentication routes
 
   scope "/", WobbleWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated, :simple_layout]
+    pipe_through([:browser, :redirect_if_user_is_authenticated, :simple_layout])
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{WobbleWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", UserRegistrationLive, :new
-      live "/users/log_in", UserLoginLive, :new
-      live "/users/reset_password", UserForgotPasswordLive, :new
-      live "/users/reset_password/:token", UserResetPasswordLive, :edit
+      live("/users/register", UserRegistrationLive, :new)
+      live("/users/log_in", UserLoginLive, :new)
+      live("/users/reset_password", UserForgotPasswordLive, :new)
+      live("/users/reset_password/:token", UserResetPasswordLive, :edit)
     end
 
-    post "/users/log_in", UserSessionController, :create
+    post("/users/log_in", UserSessionController, :create)
   end
 
   scope "/", WobbleWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through([:browser, :require_authenticated_user])
 
     live_session :require_authenticated_user,
       on_mount: [{WobbleWeb.UserAuth, :ensure_authenticated}] do
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live("/users/settings", UserSettingsLive, :edit)
+      live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
     end
   end
 
   scope "/", WobbleWeb do
-    pipe_through [:browser]
+    pipe_through([:browser])
 
-    delete "/users/log_out", UserSessionController, :delete
+    delete("/users/log_out", UserSessionController, :delete)
 
     live_session :current_user,
       on_mount: [{WobbleWeb.UserAuth, :mount_current_user}] do
-      live "/users/confirm/:token", UserConfirmationLive, :edit
-      live "/users/confirm", UserConfirmationInstructionsLive, :new
+      live("/users/confirm/:token", UserConfirmationLive, :edit)
+      live("/users/confirm", UserConfirmationInstructionsLive, :new)
     end
   end
 end

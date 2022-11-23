@@ -1,6 +1,7 @@
 defmodule WobbleWeb.UserRegistrationLive do
   use WobbleWeb, :auth_live_view
-
+  
+  alias Phoenix.HTML.Form
   alias Wobble.Accounts
   alias Wobble.Accounts.User
 
@@ -33,6 +34,10 @@ defmodule WobbleWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
+        <%= Form.inputs_for f, :organisation, fn o -> %>
+          <.input field={{o, :name}} type="text" label="Organisation Name" />
+        <% end %>
+
         <.input field={{f, :email}} type="email" label="Email" required />
         <.input field={{f, :password}} type="password" label="Password" required />
 
@@ -45,13 +50,13 @@ defmodule WobbleWeb.UserRegistrationLive do
   end
 
   def mount(_params, _session, socket) do
-    changeset = Accounts.change_user_registration(%User{})
+    changeset = Accounts.change_organisation_registration(%User{})
     socket = assign(socket, changeset: changeset, trigger_submit: false)
     {:ok, socket, temporary_assigns: [changeset: nil]}
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    case Accounts.register_user(user_params) do
+    case Accounts.register_organisation(user_params) do
       {:ok, user} ->
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
@@ -59,7 +64,7 @@ defmodule WobbleWeb.UserRegistrationLive do
             &url(~p"/users/confirm/#{&1}")
           )
 
-        changeset = Accounts.change_user_registration(user)
+        changeset = Accounts.change_organisation_registration(user)
         {:noreply, assign(socket, trigger_submit: true, changeset: changeset)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -68,7 +73,7 @@ defmodule WobbleWeb.UserRegistrationLive do
   end
 
   def handle_event("validate", %{"user" => user_params}, socket) do
-    changeset = Accounts.change_user_registration(%User{}, user_params)
+    changeset = Accounts.change_organisation_registration(%User{}, user_params)
     {:noreply, assign(socket, changeset: Map.put(changeset, :action, :validate))}
   end
 end
