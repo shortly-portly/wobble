@@ -24,23 +24,6 @@ defmodule WobbleWeb.Router do
 
   scope "/", WobbleWeb do
     pipe_through(:browser)
-
-    get("/", PageController, :home)
-    get("/hello", HelloController, :index)
-    live("/companies", CompanyLive.Index, :index)
-    live("/companies/new", CompanyLive.Index, :new)
-    live("/companies/:id/edit", CompanyLive.Index, :edit)
-
-    live("/companies/:id", CompanyLive.Show, :show)
-    live("/companies/:id/show/edit", CompanyLive.Show, :edit)
-    live("/simple", SimpleForm)
-
-    live("/organisation", OrganisationLive.Index, :index)
-    live("/organisation/new", OrganisationLive.Index, :new)
-    live("/organisation/:id/edit", OrganisationLive.Index, :edit)
-
-    live("/organisation/:id", OrganisationLive.Show, :show)
-    live("/organisation/:id/show/edit", OrganisationLive.Show, :edit)
   end
 
   # Other scopes may use custom stacks.
@@ -84,10 +67,27 @@ defmodule WobbleWeb.Router do
   scope "/", WobbleWeb do
     pipe_through([:browser, :require_authenticated_user])
 
+    get("/", PageController, :home)
+    get("/hello", HelloController, :index)
+
     live_session :require_authenticated_user,
       on_mount: [{WobbleWeb.UserAuth, :ensure_authenticated}] do
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
+      live("/companies", CompanyLive.Index, :index)
+      live("/companies/new", CompanyLive.Index, :new)
+      live("/companies/:id/edit", CompanyLive.Index, :edit)
+
+      live("/companies/:id", CompanyLive.Show, :show)
+      live("/companies/:id/show/edit", CompanyLive.Show, :edit)
+      live("/simple", SimpleForm)
+
+      live("/organisation", OrganisationLive.Index, :index)
+      live("/organisation/new", OrganisationLive.Index, :new)
+      live("/organisation/:id/edit", OrganisationLive.Index, :edit)
+
+      live("/organisation/:id", OrganisationLive.Show, :show)
+      live("/organisation/:id/show/edit", OrganisationLive.Show, :edit)
     end
   end
 

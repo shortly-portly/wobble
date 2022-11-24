@@ -22,7 +22,11 @@
             </div>
           </div>
           <div class="flex items-center gap-4">
-            Sage
+            <%= if @current_user do %>
+               <%= @current_user.organisation.name %>
+            <% else %>
+              Sage
+            <% end %>
           </div>
           <div class="flex items-center gap-4">
             <ul>

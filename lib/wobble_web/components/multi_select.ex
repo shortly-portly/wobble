@@ -47,7 +47,6 @@ defmodule WobbleWeb.SelectComponent do
   end
 
   def handle_event("selected", %{"id" => id, "label" => label}, socket) do
-    dbg(id)
 
     socket =
       socket

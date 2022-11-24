@@ -24,7 +24,7 @@ defmodule Wobble.Accounts do
 
   """
   def get_user_by_email(email) when is_binary(email) do
-    Repo.get_by(User, email: email)
+    Repo.get_by(User, email: email) |> Repo.preload(:organisation)
   end
 
   @doc """
@@ -41,7 +41,7 @@ defmodule Wobble.Accounts do
   """
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
+    user = Repo.get_by(User, email: email) |> Repo.preload(:organisation)
     if User.valid_password?(user, password), do: user
   end
 
@@ -59,7 +59,10 @@ defmodule Wobble.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do 
+    IO.puts("GET USER CALLED")
+    Repo.get!(User, id)
+    end
 
   ## User registration
 
@@ -97,7 +100,7 @@ defmodule Wobble.Accounts do
     %User{}
     |> User.organisation_registration_changeset(attrs)
     |> Repo.insert()
- end
+  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
@@ -122,7 +125,10 @@ defmodule Wobble.Accounts do
 
   """
   def change_organisation_registration(%User{} = user, attrs \\ %{}) do
-    User.organisation_registration_changeset(user, attrs, hash_password: false, validate_email: false)
+    User.organisation_registration_changeset(user, attrs,
+      hash_password: false,
+      validate_email: false
+    )
   end
 
   ## Settings
@@ -263,7 +269,7 @@ defmodule Wobble.Accounts do
   """
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+    Repo.one(query) |> Repo.preload(:organisation) 
   end
 
   @doc """

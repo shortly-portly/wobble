@@ -624,7 +624,7 @@ defmodule WobbleWeb.CoreComponents do
 
   def menu_item(assigns) do 
     ~H"""
-    <div class="py-1 leading-5 hover:bg-zinc-50">
+    <div class="py-1 leading-5 hover:bg-gray-200">
       <a href={@to}><%= @name %></a>
     </div>
     """

@@ -44,7 +44,6 @@ defmodule WobbleWeb.SimpleForm do
     form = %Form{}
     changeset = Form.changeset(%Form{}, %{})
     options = [{1, 'Tea'}, {2, 'Cheese'}, {3, 'Lager'}]
-
     socket =
       socket
       |> assign(form: form)
@@ -55,7 +54,6 @@ defmodule WobbleWeb.SimpleForm do
   end
 
   def handle_event("validate", %{"form" => params}, socket) do
-    dbg(params)
 
     changeset =
       socket.assigns.form
