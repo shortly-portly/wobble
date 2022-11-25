@@ -18,13 +18,7 @@ defmodule WobbleWeb.SimpleForm do
 
   def render(assigns) do
     ~H"""
-    <.simple_form
-      :let={f}
-      for={@changeset}
-      id="simple-form"
-      phx-change="validate"
-      phx-submit="submit"
-    >
+    <.simple_form :let={f} for={@changeset} id="simple-form" phx-change="validate" phx-submit="submit">
       <.input field={{f, :name}} type="text" label="name" />
       <.input field={{f, :age}} type="number" label="age" />
       <.live_component
@@ -37,6 +31,8 @@ defmodule WobbleWeb.SimpleForm do
         <.button phx-disable-with="Saving...">Save Simple Form</.button>
       </:actions>
     </.simple_form>
+
+    <.link patch={~p"/hello"}>Hello</.link>
     """
   end
 
@@ -44,6 +40,7 @@ defmodule WobbleWeb.SimpleForm do
     form = %Form{}
     changeset = Form.changeset(%Form{}, %{})
     options = [{1, 'Tea'}, {2, 'Cheese'}, {3, 'Lager'}]
+
     socket =
       socket
       |> assign(form: form)
@@ -54,7 +51,6 @@ defmodule WobbleWeb.SimpleForm do
   end
 
   def handle_event("validate", %{"form" => params}, socket) do
-
     changeset =
       socket.assigns.form
       |> Form.changeset(params)
