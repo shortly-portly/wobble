@@ -25,8 +25,8 @@ defmodule Wobble.AccountsFixtures do
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs
-      |> valid_user_attributes()
-      |> Wobble.Accounts.register_user()
+      |> valid_organisation_attributes()
+      |> Wobble.Accounts.register_organisation()
 
     user
   end

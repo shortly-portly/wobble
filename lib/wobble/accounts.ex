@@ -60,7 +60,6 @@ defmodule Wobble.Accounts do
 
   """
   def get_user!(id) do 
-    IO.puts("GET USER CALLED")
     Repo.get!(User, id)
     end
 

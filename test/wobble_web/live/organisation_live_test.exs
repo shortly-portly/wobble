@@ -2,7 +2,10 @@ defmodule WobbleWeb.OrganisationLiveTest do
   use WobbleWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Wobble.AccountsFixtures
   import Wobble.OrganisationsFixtures
+
+  alias Wobble.Accounts
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
@@ -13,8 +16,13 @@ defmodule WobbleWeb.OrganisationLiveTest do
     %{organisation: organisation}
   end
 
+  defp logon(%{conn: conn}) do
+    conn = log_in_user(conn, user_fixture())
+    %{conn: conn}
+  end
+
   describe "Index" do
-    setup [:create_organisation]
+    setup [:create_organisation, :logon]
 
     test "lists all organisation", %{conn: conn, organisation: organisation} do
       {:ok, _index_live, html} = live(conn, ~p"/organisation")
@@ -76,7 +84,7 @@ defmodule WobbleWeb.OrganisationLiveTest do
   end
 
   describe "Show" do
-    setup [:create_organisation]
+    setup [:create_organisation, :logon]
 
     test "displays organisation", %{conn: conn, organisation: organisation} do
       {:ok, _show_live, html} = live(conn, ~p"/organisation/#{organisation}")

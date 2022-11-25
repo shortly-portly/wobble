@@ -2,7 +2,10 @@ defmodule WobbleWeb.CompanyLiveTest do
   use WobbleWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Wobble.AccountsFixtures
   import Wobble.CompaniesFixtures
+
+  alias Wobble.Accounts
 
   @create_attrs %{employees: 42, name: "some name"}
   @update_attrs %{employees: 43, name: "some updated name"}
@@ -13,8 +16,13 @@ defmodule WobbleWeb.CompanyLiveTest do
     %{company: company}
   end
 
+  defp logon(%{conn: conn}) do
+    conn = log_in_user(conn, user_fixture())
+    %{conn: conn}
+  end
+
   describe "Index" do
-    setup [:create_company]
+    setup [:create_company, :logon]
 
     test "lists all companies", %{conn: conn, company: company} do
       {:ok, _index_live, html} = live(conn, ~p"/companies")
@@ -76,7 +84,7 @@ defmodule WobbleWeb.CompanyLiveTest do
   end
 
   describe "Show" do
-    setup [:create_company]
+    setup [:create_company, :logon]
 
     test "displays company", %{conn: conn, company: company} do
       {:ok, _show_live, html} = live(conn, ~p"/companies/#{company}")
