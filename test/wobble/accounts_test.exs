@@ -4,6 +4,7 @@ defmodule Wobble.AccountsTest do
   alias Wobble.Accounts
 
   import Wobble.AccountsFixtures
+  import Wobble.OrganisationsFixtures
   alias Wobble.Accounts.{User, UserToken}
 
   describe "get_user_by_email/1" do
@@ -86,7 +87,8 @@ defmodule Wobble.AccountsTest do
 
     test "registers users with a hashed password" do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+      organisation = organisation_fixture()
+      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email, organisation_id: organisation.id))
       assert user.email == email
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
@@ -97,18 +99,19 @@ defmodule Wobble.AccountsTest do
   describe "change_user_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_user_registration(%User{})
-      assert changeset.required == [:password, :email]
+      assert changeset.required == [:password, :email, :organisation_id]
     end
 
     test "allows fields to be set" do
       email = unique_user_email()
       password = valid_user_password()
+      organisation = organisation_fixture()
 
       changeset =
         Accounts.change_user_registration(
           %User{},
-          valid_user_attributes(email: email, password: password)
-        )
+          valid_user_attributes(email: email, password: password, organisation_id: organisation.id)
+        ) 
 
       assert changeset.valid?
       assert get_change(changeset, :email) == email

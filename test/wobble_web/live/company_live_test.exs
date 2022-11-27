@@ -5,8 +5,6 @@ defmodule WobbleWeb.CompanyLiveTest do
   import Wobble.AccountsFixtures
   import Wobble.CompaniesFixtures
 
-  alias Wobble.Accounts
-
   @create_attrs %{employees: 42, name: "some name"}
   @update_attrs %{employees: 43, name: "some updated name"}
   @invalid_attrs %{employees: nil, name: nil}
