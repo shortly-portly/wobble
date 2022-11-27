@@ -7,13 +7,15 @@ defmodule WobbleWeb.OrgRegistrationLiveTest do
   describe "Registration page" do
     test "renders registration page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/organisation/register")
+
+      assert html =~ "Register an Organisation"
     end
 
     test "redirects if already logged in", %{conn: conn} do
       result =
         conn
         |> log_in_user(user_fixture())
-        |> live(~p"/users/register")
+        |> live(~p"/organisation/register")
         |> follow_redirect(conn, "/")
 
       assert {:ok, _conn} = result
@@ -27,7 +29,7 @@ defmodule WobbleWeb.OrgRegistrationLiveTest do
         |> element("#registration_form")
         |> render_change(user: %{"email" => "with spaces", "password" => "too short"})
 
-      assert result =~ "Create User"
+      assert result =~ "Register an Organisation"
       assert result =~ "be blank"
       assert result =~ "must have the @ sign and no spaces"
       assert result =~ "should be at least 12 character"
@@ -54,7 +56,7 @@ defmodule WobbleWeb.OrgRegistrationLiveTest do
     end
 
     test "renders errors for duplicated email", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/organisation/register")
 
       user = user_fixture(%{email: "test@email.com"})
 
@@ -68,7 +70,7 @@ defmodule WobbleWeb.OrgRegistrationLiveTest do
 
   describe "registration navigation" do
     test "redirects to login page when the Log in button is clicked", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/organisation/register")
 
       {:ok, _login_live, login_html} =
         lv
