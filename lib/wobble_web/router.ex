@@ -23,7 +23,9 @@ defmodule WobbleWeb.Router do
   end
 
   scope "/", WobbleWeb do
-    pipe_through(:browser)
+    pipe_through([:browser, :simple_layout])
+
+    get("/", PageController, :home)
   end
 
   # Other scopes may use custom stacks.
@@ -55,7 +57,6 @@ defmodule WobbleWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{WobbleWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live("/users/register", UserRegistrationLive, :new)
       live("/organisation/register", OrgRegistrationLive, :new)
       live("/users/log_in", UserLoginLive, :new)
       live("/users/reset_password", UserForgotPasswordLive, :new)
@@ -68,11 +69,11 @@ defmodule WobbleWeb.Router do
   scope "/", WobbleWeb do
     pipe_through([:browser, :require_authenticated_user])
 
-    get("/", PageController, :home)
     get("/hello", HelloController, :index)
 
     live_session :require_authenticated_user,
       on_mount: [{WobbleWeb.UserAuth, :ensure_authenticated}] do
+      live("/users/register", UserRegistrationLive, :new)
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
       live("/companies", CompanyLive.Index, :index)

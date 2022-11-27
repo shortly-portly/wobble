@@ -651,8 +651,8 @@ defmodule WobbleWeb.CoreComponents do
     <div id="left" class="sidebar pt-6 border-r border-black-200">
       <div class="px-6">
         <div class="pt-2">
-          <.menu_group title="Wobble" id="wobble">
-               <.menu_item to="#" name="Create" />
+          <.menu_group title="User" id="wobble">
+               <.menu_item to="/users/register" name="Create" />
                <.menu_item to="#" name="List" />
           </.menu_group> 
         </div>

@@ -56,7 +56,6 @@ defmodule WobbleWeb.OrganisationLive.FormComponent do
   end
 
   defp save_organisation(socket, :edit, organisation_params) do
-    IO.puts("save_organisation called")
     case Organisations.update_organisation(socket.assigns.organisation, organisation_params) do
       {:ok, _organisation} ->
         {:noreply,

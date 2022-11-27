@@ -65,7 +65,7 @@ defmodule WobbleWeb.UserLoginLiveTest do
         lv
         |> element(~s|a:fl-contains("Sign up")|)
         |> render_click()
-        |> follow_redirect(conn, ~p"/users/register")
+        |> follow_redirect(conn, ~p"/organisation/register")
 
       assert login_html =~ "Register"
     end

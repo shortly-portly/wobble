@@ -1,34 +1,26 @@
-defmodule WobbleWeb.UserRegistrationLiveTest do
+defmodule WobbleWeb.OrgRegistrationLiveTest do
   use WobbleWeb.ConnCase
 
   import Phoenix.LiveViewTest
   import Wobble.AccountsFixtures
 
-  describe "User Registration page" do
-    test "redirects if not logged in", %{conn: conn} do
+  describe "Registration page" do
+    test "renders registration page", %{conn: conn} do
+      {:ok, _lv, html} = live(conn, ~p"/organisation/register")
+    end
+
+    test "redirects if already logged in", %{conn: conn} do
       result =
         conn
+        |> log_in_user(user_fixture())
         |> live(~p"/users/register")
-        |> follow_redirect(conn, "/users/log_in")
+        |> follow_redirect(conn, "/")
 
       assert {:ok, _conn} = result
     end
 
-    test "renders user registration page", %{conn: conn} do
-      {:ok, _lv, html} =
-        conn
-        |> log_in_user(user_fixture())
-        |> live(~p"/users/register")
-
-      assert html =~ "Create User"
-      assert html =~ "Log out"
-    end
-
     test "renders errors for invalid data", %{conn: conn} do
-      {:ok, lv, _html} =
-        conn
-        |> log_in_user(user_fixture())
-        |> live(~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/organisation/register")
 
       result =
         lv
@@ -36,6 +28,7 @@ defmodule WobbleWeb.UserRegistrationLiveTest do
         |> render_change(user: %{"email" => "with spaces", "password" => "too short"})
 
       assert result =~ "Create User"
+      assert result =~ "be blank"
       assert result =~ "must have the @ sign and no spaces"
       assert result =~ "should be at least 12 character"
     end
@@ -43,13 +36,10 @@ defmodule WobbleWeb.UserRegistrationLiveTest do
 
   describe "register user" do
     test "creates account and logs the user in", %{conn: conn} do
-      {:ok, lv, _html} =
-        conn
-        |> log_in_user(user_fixture())
-        |> live(~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/organisation/register")
 
       email = unique_user_email()
-      form = form(lv, "#registration_form", user: valid_user_attributes(email: email))
+      form = form(lv, "#registration_form", user: valid_organisation_attributes(email: email))
       render_submit(form)
       conn = follow_trigger_action(form, conn)
 
@@ -64,10 +54,7 @@ defmodule WobbleWeb.UserRegistrationLiveTest do
     end
 
     test "renders errors for duplicated email", %{conn: conn} do
-      {:ok, lv, _html} = 
-        conn
-        |> log_in_user(user_fixture())
-        |> live(~p"/users/register")
+      {:ok, lv, _html} = live(conn, ~p"/users/register")
 
       user = user_fixture(%{email: "test@email.com"})
 
@@ -79,4 +66,17 @@ defmodule WobbleWeb.UserRegistrationLiveTest do
     end
   end
 
+  describe "registration navigation" do
+    test "redirects to login page when the Log in button is clicked", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/register")
+
+      {:ok, _login_live, login_html} =
+        lv
+        |> element(~s|a:fl-contains("Sign in")|)
+        |> render_click()
+        |> follow_redirect(conn, ~p"/users/log_in")
+
+      assert login_html =~ "Log in"
+    end
+  end
 end
