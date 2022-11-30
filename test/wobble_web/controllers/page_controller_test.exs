@@ -4,6 +4,7 @@ defmodule WobbleWeb.PageControllerTest do
   import Wobble.AccountsFixtures
 
   test "GET /", %{conn: conn} do
+
     conn =
       conn
       |> log_in_user(user_fixture())

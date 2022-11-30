@@ -4,13 +4,20 @@ defmodule Wobble.AccountsFixtures do
   entities via the `Wobble.Accounts` context.
   """
 
+  import Wobble.OrganisationsFixtures
+
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
+  def valid_organisation_id do 
+    organisation = organisation_fixture()  
+    organisation.id
+  end
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
-      password: valid_user_password()
+      password: valid_user_password(),
+      organisation_id: valid_organisation_id() 
     })
   end
 
@@ -18,15 +25,16 @@ defmodule Wobble.AccountsFixtures do
     Enum.into(attrs, %{
       email: unique_user_email(),
       password: valid_user_password(),
-      organisation: %{"name" => "Bed Co"}
+      organisation: %{
+        name: "Big Co"}
     })
   end
 
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs
-      |> valid_organisation_attributes()
-      |> Wobble.Accounts.register_organisation()
+      |> valid_user_attributes()
+      |> Wobble.Accounts.register_user()
 
     user
   end

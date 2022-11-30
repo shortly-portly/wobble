@@ -12,6 +12,7 @@ defmodule WobbleWeb.OrgRegistrationLiveTest do
     end
 
     test "redirects if already logged in", %{conn: conn} do
+        
       result =
         conn
         |> log_in_user(user_fixture())

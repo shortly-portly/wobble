@@ -73,6 +73,7 @@ defmodule WobbleWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{WobbleWeb.UserAuth, :ensure_authenticated}] do
+      live("/users", UserListLive, :index)
       live("/users/register", UserRegistrationLive, :new)
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)

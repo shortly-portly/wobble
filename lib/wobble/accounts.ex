@@ -5,11 +5,27 @@ defmodule Wobble.Accounts do
 
   import Ecto.Query, warn: false
 
-  alias Ecto.Multi
   alias Wobble.Repo
   alias Wobble.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
+
+  @doc """
+  Get a list of users for the specified organisation.
+
+  ## Examples
+
+      iex> list_companies()
+      [%Company{}, ...]
+
+  """
+  def list_users(organisation_id) do
+    from(
+      u in User,
+      where: u.organisation_id == ^organisation_id
+    )
+    |> Repo.all()
+  end
 
   @doc """
   Gets a user by email.
@@ -23,6 +39,7 @@ defmodule Wobble.Accounts do
       nil
 
   """
+
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email) |> Repo.preload(:organisation)
   end
@@ -59,9 +76,9 @@ defmodule Wobble.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id) do 
+  def get_user!(id) do
     Repo.get!(User, id)
-    end
+  end
 
   ## User registration
 
@@ -259,7 +276,7 @@ defmodule Wobble.Accounts do
   """
   def generate_user_session_token(user) do
     {token, user_token} = UserToken.build_session_token(user)
-    Repo.insert!(user_token) 
+    Repo.insert!(user_token)
     token
   end
 
@@ -268,7 +285,7 @@ defmodule Wobble.Accounts do
   """
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query) |> Repo.preload(:organisation) 
+    Repo.one(query) |> Repo.preload(:organisation)
   end
 
   @doc """

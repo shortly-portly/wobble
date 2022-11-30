@@ -624,8 +624,8 @@ defmodule WobbleWeb.CoreComponents do
 
   def menu_item(assigns) do 
     ~H"""
-    <div class="py-1 leading-5 hover:bg-gray-200">
-      <a href={@to}><%= @name %></a>
+    <div class="py-1 leading-5">
+      <.link navigate={@to} class="hover:underline"><%= @name %></.link>
     </div>
     """
   end
@@ -634,7 +634,7 @@ defmodule WobbleWeb.CoreComponents do
     ~H"""
     <div class="pt-2">
       <div
-        class="w-full pb-2 border-b border-gray-200 font-semibold flex items-center justify-between text-left"
+        class="w-full pb-2 border-b border-gray-200 font-semibold flex items-center justify-between text-left hover:underline"
         phx-click={JS.toggle(to: "##{@id}-items")}
       >
         <%= @title %>
@@ -653,7 +653,7 @@ defmodule WobbleWeb.CoreComponents do
         <div class="pt-2">
           <.menu_group title="User" id="wobble">
                <.menu_item to="/users/register" name="Create" />
-               <.menu_item to="#" name="List" />
+               <.menu_item to="/users" name="List" />
           </.menu_group> 
         </div>
       </div>

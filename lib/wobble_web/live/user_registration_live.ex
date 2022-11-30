@@ -34,6 +34,9 @@ defmodule WobbleWeb.UserRegistrationLive do
           <.button phx-disable-with="Creating user..." class="w-full">Create User</.button>
         </:actions>
       </.simple_form>
+      <.back navigate={~p"/users"}>Back to users</.back>
+
+
     </div>
     """
   end
