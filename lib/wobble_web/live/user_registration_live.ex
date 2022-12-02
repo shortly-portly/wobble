@@ -1,7 +1,6 @@
 defmodule WobbleWeb.UserRegistrationLive do
   use WobbleWeb, :auth_live_view
   
-  alias Phoenix.HTML.Form
   alias Wobble.Accounts
   alias Wobble.Accounts.User
 

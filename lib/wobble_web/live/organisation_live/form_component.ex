@@ -2,7 +2,6 @@ defmodule WobbleWeb.OrganisationLive.FormComponent do
   use WobbleWeb, :live_component
 
   alias Wobble.Organisations
-  alias Phoenix.HTML.Form
 
   @impl true
   def render(assigns) do
