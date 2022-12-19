@@ -14,7 +14,7 @@ defmodule Wobble.CompaniesTest do
     test "list_companies/0 returns all companies" do
       user = user_fixture()
       company = company_fixture(%{organisation_id: user.organisation_id})
-      assert Companies.list_companies() == [company]
+      assert Companies.list_companies(user.organisation_id) == [company]
     end
 
     test "get_company!/1 returns the company with given id" do
@@ -62,6 +62,18 @@ defmodule Wobble.CompaniesTest do
       user = user_fixture()
       company = company_fixture(%{organisation_id: user.organisation_id})
       assert %Ecto.Changeset{} = Companies.change_company(company)
+    end
+
+    test "list_companies/1 only returns companies for organisation_id" do
+      user1 = user_fixture()
+      company1a = company_fixture(%{organisation_id: user1.organisation_id})
+      company1b = company_fixture(%{name: "company1b", organisation_id: user1.organisation_id})
+
+      user2 = user_fixture()
+      company2 = company_fixture(%{organisation_id: user2.organisation_id})
+
+      assert Companies.list_companies(user1.organisation_id) == [company1a, company1b]
+      refute Companies.list_companies(user1.organisation_id) == [company2]
     end
   end
 end

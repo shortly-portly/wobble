@@ -9,7 +9,7 @@ defmodule Wobble.Companies do
   alias Wobble.Companies.Company
 
   @doc """
-  Returns the list of companies.
+  Returns the list of companies associated with the given organisation id.
 
   ## Examples
 
@@ -17,8 +17,12 @@ defmodule Wobble.Companies do
       [%Company{}, ...]
 
   """
-  def list_companies do
-    Repo.all(Company)
+  def list_companies(organisation_id) do
+    from(
+      c in Company,
+      where: c.organisation_id == ^organisation_id
+    )
+    |> Repo.all()
   end
 
   @doc """
