@@ -11,7 +11,6 @@ defmodule Wobble.CompaniesFixtures do
     {:ok, company} =
       attrs
       |> Enum.into(%{
-        employees: 42,
         name: "some name"
       })
       |> Wobble.Companies.create_company()

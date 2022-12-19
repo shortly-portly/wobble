@@ -1,40 +1,36 @@
-<.header>
-  Listing Companies 2
-  <:actions>
-    <.link patch={~p"/companies/new"}>
-      <.button>New Company</.button>
-    </.link>
-  </:actions>
-</.header>
+<div :if={@live_action == :index}>
+  <.header>
+    Listing Companies
+    <:actions>
+      <.link patch={~p"/companies/new"}>
+        <.button>New Company</.button>
+      </.link>
+    </:actions>
+  </.header>
 
-<.table id="companies" rows={@companies} row_click={&JS.navigate(~p"/companies/#{&1}")}>
-  <:col :let={company} label="Name"><%= company.name %></:col>
-  <:col :let={company} label="Employees"><%= company.employees %></:col>
-  <:action :let={company}>
-    <div class="sr-only">
-      <.link navigate={~p"/companies/#{company}"}>Show</.link>
-    </div>
-    <.link patch={~p"/companies/#{company}/edit"}>Edit</.link>
-  </:action>
-  <:action :let={company}>
-    <.link phx-click={JS.push("delete", value: %{id: company.id})} data-confirm="Are you sure?">
-      Delete
-    </.link>
-  </:action>
-</.table>
+  <.table id="companies" rows={@companies} row_click={&JS.navigate(~p"/companies/#{&1}")}>
+    <:col :let={company} label="Name"><%= company.name %></:col>
+    <:action :let={company}>
+      <div class="sr-only">
+        <.link navigate={~p"/companies/#{company}"}>Show</.link>
+      </div>
+      <.link patch={~p"/companies/#{company}/edit"}>Edit</.link>
+    </:action>
+    <:action :let={company}>
+      <.link phx-click={JS.push("delete", value: %{id: company.id})} data-confirm="Are you sure?">
+        Delete
+      </.link>
+    </:action>
+  </.table>
+</div>
 
-<.modal
+<.live_component
   :if={@live_action in [:new, :edit]}
-  id="company-modal"
-  show
-  on_cancel={JS.navigate(~p"/companies")}
->
-  <.live_component
-    module={WobbleWeb.CompanyLive.FormComponent}
-    id={@company.id || :new}
-    title={@page_title}
-    action={@live_action}
-    company={@company}
-    navigate={~p"/companies"}
-  />
-</.modal>
+  module={WobbleWeb.CompanyLive.FormComponent}
+  id={@company.id || :new}
+  title={@page_title}
+  action={@live_action}
+  company={@company}
+  current_user={@current_user}
+  navigate={~p"/companies"}
+/>

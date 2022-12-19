@@ -5,17 +5,17 @@ defmodule WobbleWeb.CompanyLiveTest do
   import Wobble.AccountsFixtures
   import Wobble.CompaniesFixtures
 
-  @create_attrs %{employees: 42, name: "some name"}
-  @update_attrs %{employees: 43, name: "some updated name"}
-  @invalid_attrs %{employees: nil, name: nil}
+  @update_attrs %{name: "some updated name"}
+  @invalid_attrs %{name: nil}
 
   defp create_company(_) do
-    company = company_fixture()
-    %{company: company}
+    user = user_fixture()
+    company = company_fixture(%{organisation_id: user.organisation_id})
+    %{user: user, company: company}
   end
 
-  defp logon(%{conn: conn}) do
-    conn = log_in_user(conn, user_fixture())
+  defp logon(%{conn: conn, user: user}) do
+    conn = log_in_user(conn, user)
     %{conn: conn}
   end
 
@@ -43,7 +43,7 @@ defmodule WobbleWeb.CompanyLiveTest do
 
       {:ok, _, html} =
         index_live
-        |> form("#company-form", company: @create_attrs)
+        |> form("#company-form", company: %{name: "foobar"})
         |> render_submit()
         |> follow_redirect(conn, ~p"/companies")
 

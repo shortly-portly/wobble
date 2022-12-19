@@ -19,6 +19,7 @@ defmodule WobbleWeb.SimpleForm do
   def render(assigns) do
     ~H"""
     <.simple_form :let={f} for={@changeset} id="simple-form" phx-change="validate" phx-submit="submit">
+      <div class="flex flex-col">
       <.input field={{f, :name}} type="text" label="name" />
       <.input field={{f, :age}} type="number" label="age" />
       <.live_component
@@ -27,12 +28,25 @@ defmodule WobbleWeb.SimpleForm do
         field={{f, :foobar}}
         options={@options}
       />
+    </div>
       <:actions>
         <.button phx-disable-with="Saving...">Save Simple Form</.button>
       </:actions>
     </.simple_form>
 
     <.link patch={~p"/hello"}>Hello</.link>
+
+    <div class="flex flex-col">
+      <div class="mt-4">
+        <div>Label 1</div>
+        <div><input type="text" /></div>
+      </div>
+
+      <div class="mt-4">
+        <div>Label 2</div>
+        <div><input type="text" /></div>
+      </div>
+    </div>
     """
   end
 

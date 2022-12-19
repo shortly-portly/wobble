@@ -1,6 +1,6 @@
 defmodule WobbleWeb.UserRegistrationLive do
   use WobbleWeb, :auth_live_view
-  
+
   alias Wobble.Accounts
   alias Wobble.Accounts.User
 
@@ -34,9 +34,8 @@ defmodule WobbleWeb.UserRegistrationLive do
         </:actions>
       </.simple_form>
       <.back navigate={~p"/users"}>Back to users</.back>
-
-
     </div>
+
     """
   end
 

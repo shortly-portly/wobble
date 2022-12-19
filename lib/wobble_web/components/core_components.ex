@@ -339,22 +339,24 @@ defmodule WobbleWeb.CoreComponents do
 
   def input(assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
-      <.label for={@id}><%= @label %></.label>
-      <input
-        type={@type}
-        name={@name}
-        id={@id || @name}
-        value={@value}
-        class={[
-          input_border(@errors),
-          "mt-2 block w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
-          "text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6",
-          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5"
-        ]}
-        {@rest}
-      />
-      <.error :for={msg <- @errors}><%= msg %></.error>
+    <div class="mt-6">
+      <div phx-feedback-for={@name}>
+        <.label for={@id}><%= @label %></.label>
+        <input
+          type={@type}
+          name={@name}
+          id={@id || @name}
+          value={@value}
+          class={[
+            input_border(@errors),
+            "mt-2 block w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
+            "text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6",
+            "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5"
+          ]}
+          {@rest}
+        />
+        <.error :for={msg <- @errors}><%= msg %></.error>
+      </div>
     </div>
     """
   end
@@ -621,8 +623,7 @@ defmodule WobbleWeb.CoreComponents do
     Phoenix.HTML.html_escape(val1) == Phoenix.HTML.html_escape(val2)
   end
 
-
-  def menu_item(assigns) do 
+  def menu_item(assigns) do
     ~H"""
     <div class="py-1 leading-5">
       <.link navigate={@to} class="hover:underline"><%= @name %></.link>
@@ -652,11 +653,20 @@ defmodule WobbleWeb.CoreComponents do
       <div class="px-6">
         <div class="pt-2">
           <.menu_group title="User" id="wobble">
-               <.menu_item to="/users/register" name="Create" />
-               <.menu_item to="/users" name="List" />
-          </.menu_group> 
+            <.menu_item to="/users/register" name="Create" />
+            <.menu_item to="/users" name="List" />
+          </.menu_group>
         </div>
       </div>
+    </div>
+    """
+  end
+
+  def form_section(assigns) do
+    ~H"""
+    <div>
+      <div class="font-semibold text-indigo-500 text-2xl mt-6"><%= @title %></div>
+      <%= render_slot(@inner_block) %>
     </div>
     """
   end

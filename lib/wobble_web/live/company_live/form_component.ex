@@ -20,8 +20,35 @@ defmodule WobbleWeb.CompanyLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={{f, :name}} type="text" label="name" />
-        <.input field={{f, :employees}} type="number" label="employees" />
+        <div class="flex">
+          <div class="w-1/2 flex flex-col border-2 mb-2 mr-2 pb-8 px-8 py-8">
+            <.form_section title="Company Details">
+              <.input field={{f, :name}} type="text" label="name" />
+              <.input field={{f, :address_line_1}} type="text" label="Address" />
+              <.input field={{f, :address_line_2}} type="text" />
+              <.input field={{f, :county}} type="text" label="County" />
+              <.input field={{f, :postcode}} type="text" label="Postcode" />
+              <.input field={{f, :country}} type="text" label="Country" />
+            </.form_section>
+            <.form_section title="Contact Details">
+              <.input field={{f, :telephone}} type="text" label="Telephone" />
+              <.input field={{f, :email}} type="text" label="Email" />
+              <.input field={{f, :website}} type="text" label="website" />
+            </.form_section>
+          </div>
+          <div class="w-1/2 flex flex-col border-2 mb-2 mr-2 pb-8 px-8 py-8">
+            <.form_section title="VAT Details">
+              <.input
+                field={{f, :vat_registration_number}}
+                type="text"
+                label="VAT Registration Number"
+              />
+              <.input field={{f, :vat_country_code}} type="text" label="VAT Country Code" />
+              <.input field={{f, :next_vat_return_date}} type="text" label="Next VAT Return Date" />
+              <.input field={{f, :eori_number}} type="text" label="EORI Number" />
+            </.form_section>
+          </div>
+        </div>
         <:actions>
           <.button phx-disable-with="Saving...">Save Company</.button>
         </:actions>
@@ -68,6 +95,9 @@ defmodule WobbleWeb.CompanyLive.FormComponent do
   end
 
   defp save_company(socket, :new, company_params) do
+    company_params =
+      Map.put(company_params, "organisation_id", socket.assigns.current_user.organisation_id)
+
     case Companies.create_company(company_params) do
       {:ok, _company} ->
         {:noreply,
