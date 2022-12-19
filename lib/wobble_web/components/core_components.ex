@@ -652,6 +652,10 @@ defmodule WobbleWeb.CoreComponents do
     <div id="left" class="sidebar pt-6 border-r border-black-200">
       <div class="px-6">
         <div class="pt-2">
+          <.menu_group title="Company" id="company_menu">
+            <.menu_item to="/companies/new" name="Create" />
+            <.menu_item to="/companies" name="List" />
+          </.menu_group>
           <.menu_group title="User" id="wobble">
             <.menu_item to="/users/register" name="Create" />
             <.menu_item to="/users" name="List" />
@@ -667,6 +671,18 @@ defmodule WobbleWeb.CoreComponents do
     <div>
       <div class="font-semibold text-indigo-500 text-2xl mt-6"><%= @title %></div>
       <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
+
+  def alert(assigns) do
+    ~H"""
+    <div class="fixed top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 shadow-md shadow-zinc-900/5 ring-1
+        bg-rose-50 p-3 text-rose-900 shadow-md ring-rose-500 fill-rose-900">
+      <p class="flex items-center gap-1.5 text-[0.8125rem] font-semibold leading-6">
+        <Heroicons.exclamation_circle class="h-4 w-4" /> Alert
+      </p>
+      <p class="mt-2 text-[0.8125rem] leading-5">Something went wrong!</p>
     </div>
     """
   end

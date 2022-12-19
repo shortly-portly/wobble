@@ -20,6 +20,8 @@ defmodule WobbleWeb.CompanyLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.alert :if={@changeset.action == :insert} /> 
+
         <div class="flex">
           <div class="w-1/2 flex flex-col border-2 mb-2 mr-2 pb-8 px-8 py-8">
             <.form_section title="Company Details">
@@ -106,7 +108,10 @@ defmodule WobbleWeb.CompanyLive.FormComponent do
          |> push_navigate(to: socket.assigns.navigate)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply,
+         socket
+         |> put_flash(:error, "Oops something went wrong!")
+         |> assign(changeset: changeset)}
     end
   end
 end
