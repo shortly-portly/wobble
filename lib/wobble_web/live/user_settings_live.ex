@@ -34,7 +34,7 @@ defmodule WobbleWeb.UserSettingsLive do
       </:actions>
     </.simple_form>
 
-    <.header>Change Password</.header>
+    <.header class="pt-6">Change Password</.header>
 
     <.simple_form
       :let={f}

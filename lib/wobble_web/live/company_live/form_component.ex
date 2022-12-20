@@ -7,9 +7,8 @@ defmodule WobbleWeb.CompanyLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
+      <.header class="text-center">
         <%= @title %>
-        <:subtitle>Use this form to manage company records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -55,6 +54,7 @@ defmodule WobbleWeb.CompanyLive.FormComponent do
           <.button phx-disable-with="Saving...">Save Company</.button>
         </:actions>
       </.simple_form>
+      <.back navigate={~p"/companies"}>Back to companies</.back>
     </div>
     """
   end

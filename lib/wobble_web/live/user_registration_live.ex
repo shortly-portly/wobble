@@ -30,7 +30,7 @@ defmodule WobbleWeb.UserRegistrationLive do
         <.input field={{f, :password}} type="password" label="Password" required />
 
         <:actions>
-          <.button phx-disable-with="Creating user..." class="w-full">Create User</.button>
+          <.button phx-disable-with="Creating user..." >Create User</.button>
         </:actions>
       </.simple_form>
       <.back navigate={~p"/users"}>Back to users</.back>
