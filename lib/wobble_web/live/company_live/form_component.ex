@@ -100,14 +100,14 @@ defmodule WobbleWeb.CompanyLive.FormComponent do
     company_params =
       Map.put(company_params, "organisation_id", socket.assigns.current_user.organisation_id)
 
-    case Companies.create_company(company_params) do
-      {:ok, _company} ->
+    case Companies.create_company(socket.assigns.current_user.id, company_params) do
+      {:ok, _multi} ->
         {:noreply,
          socket
          |> put_flash(:info, "Company created successfully")
          |> push_navigate(to: socket.assigns.navigate)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, :company, %Ecto.Changeset{} = changeset} ->
         {:noreply,
          socket
          |> put_flash(:error, "Oops something went wrong!")

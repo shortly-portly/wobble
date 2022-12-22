@@ -4,10 +4,11 @@ defmodule Wobble.Companies do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.Multi
   alias Wobble.Repo
 
   alias Wobble.Companies.Company
-
+  alias Wobble.CompanyUsers 
   @doc """
   Returns the list of companies associated with the given organisation id.
 
@@ -44,6 +45,11 @@ defmodule Wobble.Companies do
   @doc """
   Creates a company.
 
+  This is a mutli stage process.
+  * Create the company
+  * Add the user who created the company to the company_user table (which controls access to the
+  newly created company).
+
   ## Examples
 
       iex> create_company(%{field: value})
@@ -53,10 +59,19 @@ defmodule Wobble.Companies do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_company(attrs \\ %{}) do
-    %Company{}
-    |> Company.changeset(attrs)
-    |> Repo.insert()
+  def create_company(user_id, attrs \\ %{}) do
+    Multi.new()
+    |> Multi.insert(:company, Company.changeset(%Company{}, attrs))
+    |> Multi.run(:company_user, &create_company_user(&1, &2, user_id))
+    |> Repo.transaction()
+  end
+
+  def create_company_user(_changes, %{company: company}, user_id) do
+
+    CompanyUsers.create_company_user(%{
+      user_id: user_id,
+      company_id: company.id
+    })
   end
 
   @doc """

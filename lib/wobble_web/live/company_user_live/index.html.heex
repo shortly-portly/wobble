@@ -1,0 +1,39 @@
+<.header>
+  Listing Company users
+  <:actions>
+    <.link patch={~p"/company_users/new"}>
+      <.button>New Company user</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="company_users" rows={@company_users} row_click={&JS.navigate(~p"/company_users/#{&1}")}>
+  <:col :let={company_user} label="Name"><%= company_user.name %></:col>
+  <:action :let={company_user}>
+    <div class="sr-only">
+      <.link navigate={~p"/company_users/#{company_user}"}>Show</.link>
+    </div>
+    <.link patch={~p"/company_users/#{company_user}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={company_user}>
+    <.link phx-click={JS.push("delete", value: %{id: company_user.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="company_user-modal"
+  show
+  on_cancel={JS.navigate(~p"/company_users")}
+>
+  <.live_component
+    module={WobbleWeb.CompanyUserLive.FormComponent}
+    id={@company_user.id || :new}
+    title={@page_title}
+    action={@live_action}
+    company_user={@company_user}
+    navigate={~p"/company_users"}
+  />
+</.modal>

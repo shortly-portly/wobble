@@ -1,0 +1,26 @@
+<.header>
+  Company user <%= @company_user.id %>
+  <:subtitle>This is a company_user record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/company_users/#{@company_user}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit company_user</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @company_user.name %></:item>
+</.list>
+
+<.back navigate={~p"/company_users"}>Back to company_users</.back>
+
+<.modal :if={@live_action == :edit} id="company_user-modal" show on_cancel={JS.patch(~p"/company_users/#{@company_user}")}>
+  <.live_component
+    module={WobbleWeb.CompanyUserLive.FormComponent}
+    id={@company_user.id}
+    title={@page_title}
+    action={@live_action}
+    company_user={@company_user}
+    navigate={~p"/company_users/#{@company_user}"}
+  />
+</.modal>

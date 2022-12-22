@@ -10,7 +10,7 @@ defmodule WobbleWeb.CompanyLiveTest do
 
   defp create_company(_) do
     user = user_fixture()
-    company = company_fixture(%{organisation_id: user.organisation_id})
+    %{company: company} = company_fixture(user.id, %{organisation_id: user.organisation_id})
     %{user: user, company: company}
   end
 
@@ -43,7 +43,7 @@ defmodule WobbleWeb.CompanyLiveTest do
 
       {:ok, _, html} =
         index_live
-        |> form("#company-form", company: %{name: "foobar"})
+        |> form("#company-form", company: %{name: "foobar2"})
         |> render_submit()
         |> follow_redirect(conn, ~p"/companies")
 
