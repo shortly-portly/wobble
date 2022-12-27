@@ -8,7 +8,9 @@ defmodule Wobble.Companies do
   alias Wobble.Repo
 
   alias Wobble.Companies.Company
-  alias Wobble.CompanyUsers 
+  alias Wobble.CompanyUsers
+  alias Wobble.CompanyUsers.CompanyUser
+
   @doc """
   Returns the list of companies associated with the given organisation id.
 
@@ -22,6 +24,25 @@ defmodule Wobble.Companies do
     from(
       c in Company,
       where: c.organisation_id == ^organisation_id
+    )
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of companies associated with the given user id. 
+
+  ## Examples
+
+      iex> list_companies_for_user(123)
+      [%Company{}, ...]
+
+  """
+  def list_companies_for_user(user_id) do
+    from(
+      c in Company,
+      join: cu in CompanyUser,
+      where: c.id == cu.company_id,
+      where: cu.user_id == ^user_id
     )
     |> Repo.all()
   end
@@ -67,7 +88,6 @@ defmodule Wobble.Companies do
   end
 
   def create_company_user(_changes, %{company: company}, user_id) do
-
     CompanyUsers.create_company_user(%{
       user_id: user_id,
       company_id: company.id

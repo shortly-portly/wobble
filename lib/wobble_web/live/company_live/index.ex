@@ -6,7 +6,7 @@ defmodule WobbleWeb.CompanyLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :companies, list_companies(socket.assigns.current_user.organisation_id))}
+    {:ok, assign(socket, :companies, list_companies_for_user(socket.assigns.current_user.id))}
   end
 
   @impl true
@@ -37,10 +37,10 @@ defmodule WobbleWeb.CompanyLive.Index do
     company = Companies.get_company!(id)
     {:ok, _} = Companies.delete_company(company)
 
-    {:noreply, assign(socket, :companies, list_companies(socket.assigns.current_user.organisation_id))}
+    {:noreply, assign(socket, :companies, list_companies_for_user(socket.assigns.current_user.id))}
   end
 
-  defp list_companies(organisation_id) do
-    Companies.list_companies(organisation_id)
+  defp list_companies_for_user(user_id) do
+    Companies.list_companies_for_user(user_id)
   end
 end
