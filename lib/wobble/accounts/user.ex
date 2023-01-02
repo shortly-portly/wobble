@@ -2,11 +2,15 @@ defmodule Wobble.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Wobble.CompanyUsers
+
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :company_id, :integer
+    field :company_name, :string
 
     belongs_to :organisation, Wobble.Organisations.Organisation
 
@@ -38,7 +42,7 @@ defmodule Wobble.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :organisation_id])
+    |> cast(attrs, [:email, :password, :organisation_id, :company_id, :company_name])
     |> validate_required([:organisation_id])
     |> validate_email(opts)
     |> validate_password(opts)
@@ -59,6 +63,16 @@ defmodule Wobble.Accounts.User do
     )
   end
 
+  @doc """
+  A user changeset to enable the setting of company id.
+  """
+  def company_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:company_id])
+    |> validate_required([:company_id])
+    |> set_company_name()
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])
@@ -77,6 +91,16 @@ defmodule Wobble.Accounts.User do
     |> maybe_hash_password(opts)
   end
 
+
+  defp set_company_name(changeset) do
+    company_id = get_change(changeset, :company_id)
+    user_id = get_field(changeset, :id)
+    company_user = CompanyUsers.get_company_user_for_company!(user_id, company_id) |> dbg()
+
+    put_change(changeset, :company_name, company_user.company.name)
+
+  end
+  
   defp maybe_hash_password(changeset, opts) do
     hash_password? = Keyword.get(opts, :hash_password, true)
     password = get_change(changeset, :password)

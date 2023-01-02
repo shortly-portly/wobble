@@ -17,8 +17,26 @@ defmodule Wobble.CompanyUsers do
       [%CompanyUser{}, ...]
 
   """
-  def list_company_users do
+  def list_company_users() do
     Repo.all(CompanyUser)
+  end
+
+  @doc """
+  Returns the list of companies associated with this user.
+
+  ## Examples
+
+      iex> list_company_users(123)
+      [%CompanyUser{}, ...]
+
+  """
+  def list_companies_for_user(user_id) do
+    from(
+      cu in CompanyUser,
+      where: cu.user_id == ^user_id,
+      preload: [:company]
+    )
+    |> Repo.all()
   end
 
   @doc """
@@ -36,6 +54,28 @@ defmodule Wobble.CompanyUsers do
 
   """
   def get_company_user!(id), do: Repo.get!(CompanyUser, id)
+
+  @doc """
+  Get a single company_user for the company/user id combination. 
+
+  This function is useful for confirming that a specific company/user id combination exists. 
+  For ecample when a user selects a company.
+      iex> get_company_user_for_company!(123, 355)
+      %CompanyUser{}
+
+      iex> get_company_user_for_company!(123, 12)
+      ** (Ecto.NoResultsError)
+    
+  """
+  def get_company_user_for_company!(user_id, company_id) do
+    from(
+      cu in CompanyUser,
+      where: cu.user_id == ^user_id,
+      where: cu.company_id == ^company_id,
+      preload: [:company]
+    )
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a company_user.

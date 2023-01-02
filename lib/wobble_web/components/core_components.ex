@@ -361,6 +361,26 @@ defmodule WobbleWeb.CoreComponents do
     """
   end
 
+  def radio(%{field: {f, field}} = assigns) do
+    assigns =
+      assigns
+      |> assign(field: nil)
+      |> assign_new(:name, fn ->
+        Phoenix.HTML.Form.input_name(f, field)
+      end)
+      |> assign_new(:id, fn -> Phoenix.HTML.Form.input_id(f, field) end)
+      |> assign_new(:value, fn -> Phoenix.HTML.Form.input_value(f, field) end)
+      |> assign_new(:errors, fn -> translate_errors(f.errors || [], field) end)
+      |> assign(:selected, assigns.value == assigns.default)
+
+    ~H"""
+    <div class="mt-6">
+      <input type="radio" name={@name} id={@id || @name} value={@value} checked={@selected} /> 
+      <span class="ml-4"><%= @label %></span>
+    </div>
+    """
+  end
+
   defp input_border([] = _errors),
     do: "border-zinc-300 focus:border-zinc-400 focus:ring-zinc-800/5"
 

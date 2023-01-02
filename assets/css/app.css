@@ -3,6 +3,10 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+.text-brand {
+  --tw-text-opacity: 1;
+  color: rgb(108, 99, 255 / var(--tw-text-opacity));
+}
 
 html,
 body {

@@ -1,0 +1,15 @@
+<.header>
+  Dead <%= @dead.id %>
+  <:subtitle>This is a dead record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/dead/#{@dead}/edit"}>
+      <.button>Edit dead</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @dead.name %></:item>
+</.list>
+
+<.back navigate={~p"/dead"}>Back to dead</.back>

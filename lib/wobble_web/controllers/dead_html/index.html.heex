@@ -1,0 +1,23 @@
+<.header>
+  Listing Dead
+  <:actions>
+    <.link href={~p"/dead/new"}>
+      <.button>New Dead</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="dead" rows={@dead_collection} row_click={&JS.navigate(~p"/dead/#{&1}")}>
+  <:col :let={dead} label="Name"><%= dead.name %></:col>
+  <:action :let={dead}>
+    <div class="sr-only">
+      <.link navigate={~p"/dead/#{dead}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/dead/#{dead}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={dead}>
+    <.link href={~p"/dead/#{dead}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

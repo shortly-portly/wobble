@@ -172,6 +172,20 @@ defmodule WobbleWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_has_company, _params, _session, socket) do
+    user = socket.assigns.current_user
+    if user.company_id do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You must select a company to access this page jjjjjj")
+        |> Phoenix.LiveView.redirect(to: ~p"/companies/select_company/")
+
+      {:halft, socket}
+    end
+  end
+
   defp mount_current_user(session, socket) do
     case session do
       %{"user_token" => user_token} ->
@@ -211,6 +225,22 @@ defmodule WobbleWeb.UserAuth do
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
+      |> halt()
+    end
+  end
+
+  @doc """
+  Used for routes that require a auser to have selected a company. 
+  """
+  def require_company(conn, _opts) do
+    user = conn.assigns[:current_user]
+    if user.company_id do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must select a company to access this page")
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/companies/select_company/")
       |> halt()
     end
   end
