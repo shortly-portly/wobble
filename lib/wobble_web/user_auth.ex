@@ -147,6 +147,18 @@ defmodule WobbleWeb.UserAuth do
     {:cont, mount_current_user(session, socket)}
   end
 
+  def on_mount(:mount_current_company, _params, session, socket) do
+
+    socket =
+      socket
+      |> Phoenix.Component.assign_new(:current_company_name, fn ->
+        session["current_company_name"]
+      end)
+      |> Phoenix.Component.assign_new(:current_company_id, fn -> session["current_company_id"] end)
+
+    {:cont, socket}
+  end
+
   def on_mount(:ensure_authenticated, _params, session, socket) do
     socket = mount_current_user(session, socket)
 
@@ -172,17 +184,28 @@ defmodule WobbleWeb.UserAuth do
     end
   end
 
-  def on_mount(:ensure_has_company, _params, _session, socket) do
-    user = socket.assigns.current_user
-    if user.company_id do
+  def on_mount(:ensure_has_company, _params, session, socket) do
+
+    current_company_id = session["current_company_id"]
+    current_company_name = session["current_company_name"]
+
+    if current_company_id do
+      socket =
+        socket
+        |> Phoenix.Component.assign_new(:current_company_id, fn -> current_company_id end)
+        |> Phoenix.Component.assign_new(:current_company_name, fn -> current_company_name end)
+
       {:cont, socket}
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must select a company to access this page jjjjjj")
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          "You must select a company to access this page jjjjjj"
+        )
         |> Phoenix.LiveView.redirect(to: ~p"/companies/select_company/")
 
-      {:halft, socket}
+      {:halt, socket}
     end
   end
 
@@ -233,9 +256,14 @@ defmodule WobbleWeb.UserAuth do
   Used for routes that require a auser to have selected a company. 
   """
   def require_company(conn, _opts) do
-    user = conn.assigns[:current_user]
-    if user.company_id do
+
+    current_company_id = get_session(conn, "current_company_id")  
+    current_company_name = get_session(conn, "current_company_name") 
+
+    if current_company_id do
       conn
+      |> assign(:current_company_id, current_company_id)
+      |> assign(:current_company_name, current_company_name)
     else
       conn
       |> put_flash(:error, "You must select a company to access this page")

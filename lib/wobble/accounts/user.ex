@@ -73,7 +73,7 @@ defmodule Wobble.Accounts.User do
     |> set_company_name()
   end
 
-  defp validate_email(changeset, opts) do
+  def validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
@@ -81,7 +81,7 @@ defmodule Wobble.Accounts.User do
     |> maybe_validate_unique_email(opts)
   end
 
-  defp validate_password(changeset, opts) do
+  def validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
@@ -91,16 +91,14 @@ defmodule Wobble.Accounts.User do
     |> maybe_hash_password(opts)
   end
 
-
   defp set_company_name(changeset) do
     company_id = get_change(changeset, :company_id)
     user_id = get_field(changeset, :id)
-    company_user = CompanyUsers.get_company_user_for_company!(user_id, company_id) |> dbg()
+    company_user = CompanyUsers.get_company_user_for_company!(user_id, company_id)
 
     put_change(changeset, :company_name, company_user.company.name)
-
   end
-  
+
   defp maybe_hash_password(changeset, opts) do
     hash_password? = Keyword.get(opts, :hash_password, true)
     password = get_change(changeset, :password)
@@ -125,6 +123,7 @@ defmodule Wobble.Accounts.User do
       changeset
     end
   end
+
 
   @doc """
   A user changeset for changing the email.

@@ -31,7 +31,7 @@ defmodule Wobble.AccountsFixtures do
   end
 
   def user_fixture(attrs \\ %{}) do
-    {:ok, user} =
+    {:ok, %{user: user}} =
       attrs
       |> valid_user_attributes()
       |> Wobble.Accounts.register_user()

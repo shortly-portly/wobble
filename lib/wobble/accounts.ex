@@ -7,6 +7,7 @@ defmodule Wobble.Accounts do
 
   alias Wobble.Repo
   alias Wobble.Accounts.{User, UserToken, UserNotifier}
+  alias Wobble.CompanyUsers
 
   ## Database getters
 
@@ -83,7 +84,7 @@ defmodule Wobble.Accounts do
   ## User registration
 
   @doc """
-  Registers a user.
+  Registers a user and potentially add them to the current company.
 
   ## Examples
 
@@ -94,10 +95,25 @@ defmodule Wobble.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+  def register_user(attrs, company_id \\ nil) do
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:user, User.registration_changeset(%User{}, attrs))
+    |> Ecto.Multi.run(:company, &maybe_add_user_to_company(&1, &2, attrs, company_id))
+    |> Repo.transaction()
+  end
+
+  @doc """
+  Potentially add the newly created user to the provided company.
+  """
+  def maybe_add_user_to_company(_repo, %{user: user}, attrs, company_id) do
+    if attrs["add_to_company"] == "true" do
+      CompanyUsers.create_company_user(%{
+        user_id: user.id,
+        company_id: company_id
+      })
+    else
+      {:ok, :nop}
+    end
   end
 
   @doc """

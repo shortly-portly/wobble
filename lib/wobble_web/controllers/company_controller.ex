@@ -1,10 +1,8 @@
 defmodule WobbleWeb.CompanyController do
   use WobbleWeb, :controller
 
-  alias Wobble.Accounts.User
   alias Wobble.CompanyUsers
   alias Wobble.CompanyUsers.CompanyUser
-  alias Wobble.Repo
 
   def index(conn, _params) do
     companies = CompanyUsers.list_companies_for_user(conn.assigns.current_user.id)
@@ -14,15 +12,16 @@ defmodule WobbleWeb.CompanyController do
   end
 
   def update(conn, %{"company_user" => company_user}) do
-    attrs = %{company_id: company_user["company_id"]}
     user = conn.assigns.current_user
 
-    user
-    |> User.company_changeset(attrs)
-    |> Repo.update()
-    |> dbg()
+    company_id = String.to_integer(company_user["company_id"])
+    company_user = CompanyUsers.get_company_user_for_company!(user.id, company_id)
+    user_return_to = get_session(conn, :user_return_to)
 
-    redirect(conn, to: ~p"/")
+    conn
+    |> put_session(:current_company_name, company_user.company.name)
+    |> put_session(:current_company_id, company_user.company_id)
+    |> redirect(to: user_return_to || ~p"/")
   end
 
   def update(conn, _params) do

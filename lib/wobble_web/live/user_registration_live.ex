@@ -1,4 +1,14 @@
 defmodule WobbleWeb.UserRegistrationLive do
+  @moduledoc """
+  A modified version of the User Registration Live created my phx.gen.auth.
+
+  We include a checkbox to indicate whether the newly created user should be added
+  to the current company (the one associated with the currently logged in user). 
+
+  As this is a simple checkbox with no validation we haven't created an embedded Schema
+  for the form as you would do if the data was more complex or required validation. We 
+  simply added an attribute to the layout and handle it manually.
+  """
   use WobbleWeb, :auth_live_view
 
   alias Wobble.Accounts
@@ -8,7 +18,7 @@ defmodule WobbleWeb.UserRegistrationLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        Create User
+        Create User with Embedded Schema
       </.header>
 
       <.simple_form
@@ -29,19 +39,31 @@ defmodule WobbleWeb.UserRegistrationLive do
         <.input field={{f, :email}} type="email" label="Email" required />
         <.input field={{f, :password}} type="password" label="Password" required />
 
+        <.input
+          field={{f, :add_to_company}}
+          type="checkbox"
+          label="Add to Company"
+          value={@add_to_company}
+        />
+
         <:actions>
-          <.button phx-disable-with="Creating user..." >Create User</.button>
+          <.button phx-disable-with="Creating user...">Create User</.button>
         </:actions>
       </.simple_form>
       <.back navigate={~p"/users"}>Back to users</.back>
     </div>
-
     """
   end
 
   def mount(_params, _session, socket) do
     changeset = Accounts.change_organisation_registration(%User{})
-    socket = assign(socket, changeset: changeset, trigger_submit: false)
+
+    socket =
+      socket
+      |> assign(changeset: changeset)
+      |> assign(add_to_company: true)
+      |> assign(trigger_submit: false)
+
     {:ok, socket, temporary_assigns: [changeset: nil]}
   end
 
@@ -49,8 +71,8 @@ defmodule WobbleWeb.UserRegistrationLive do
     user_params =
       Map.put(user_params, "organisation_id", socket.assigns.current_user.organisation_id)
 
-    case Accounts.register_user(user_params) do
-      {:ok, user} ->
+    case Accounts.register_user(user_params, socket.assigns.current_company_id) do
+      {:ok, %{user: user}} ->
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
@@ -60,13 +82,18 @@ defmodule WobbleWeb.UserRegistrationLive do
         changeset = Accounts.change_user_registration(user)
         {:noreply, assign(socket, trigger_submit: true, changeset: changeset)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, :user, %Ecto.Changeset{} = changeset, _rest} ->
         {:noreply, assign(socket, :changeset, changeset)}
     end
   end
 
   def handle_event("validate", %{"user" => user_params}, socket) do
     changeset = Accounts.change_user_registration(%User{}, user_params)
-    {:noreply, assign(socket, changeset: Map.put(changeset, :action, :validate))}
+    add_to_company = user_params["add_to_company"] 
+
+    {:noreply,
+     socket
+     |> assign(changeset: Map.put(changeset, :action, :validate))
+     |> assign(add_to_company: add_to_company)}
   end
 end
