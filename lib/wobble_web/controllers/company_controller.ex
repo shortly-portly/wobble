@@ -22,7 +22,7 @@ defmodule WobbleWeb.CompanyController do
     conn
     |> put_session(:current_company_name, company_user.company.name)
     |> put_session(:current_company_id, company_user.company_id)
-    |> redirect(to: user_return_to || ~p"/")
+    |> redirect(to: user_return_to || ~p"/welcome")
   end
 
   def update(conn, _params) do

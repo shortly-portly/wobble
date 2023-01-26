@@ -32,8 +32,8 @@ defmodule WobbleWeb.UserAuthTest do
     end
 
     test "redirects to the configured path", %{conn: conn, user: user} do
-      conn = conn |> put_session(:user_return_to, "/hello") |> UserAuth.log_in_user(user)
-      assert redirected_to(conn) == "/hello"
+      conn = conn |> put_session(:user_return_to, "/welcome") |> UserAuth.log_in_user(user)
+      assert redirected_to(conn) == "/welcome"
     end
 
     test "writes a cookie if remember_me is configured", %{conn: conn, user: user} do

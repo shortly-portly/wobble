@@ -34,7 +34,7 @@ defmodule WobbleWeb.SimpleForm do
       </:actions>
     </.simple_form>
 
-    <.link patch={~p"/hello"}>Hello</.link>
+    <.link patch={~p"/welcome"}>Welcome</.link>
 
     <div class="flex flex-col">
       <div class="mt-4">

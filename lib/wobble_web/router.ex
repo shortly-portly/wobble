@@ -112,7 +112,7 @@ defmodule WobbleWeb.Router do
   scope "/", WobbleWeb do
     pipe_through([:browser, :require_authenticated_user, :require_company])
 
-    get("/hello", HelloController, :index)
+    get("/welcome", HelloController, :index)
 
     live_session :require_company,
       on_mount: [
