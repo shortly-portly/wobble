@@ -17,7 +17,7 @@ defmodule WobbleWeb.OrgRegistrationLiveTest do
         conn
         |> log_in_user(user_fixture())
         |> live(~p"/organisation/register")
-        |> follow_redirect(conn, "/")
+        |> follow_redirect(conn, "/welcome")
 
       assert {:ok, _conn} = result
     end
@@ -46,7 +46,7 @@ defmodule WobbleWeb.OrgRegistrationLiveTest do
       render_submit(form)
       conn = follow_trigger_action(form, conn)
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/welcome"
 
       # Now do a logged in request and assert on the menu
       conn = get(conn, "/")
