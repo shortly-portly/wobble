@@ -9,8 +9,6 @@ defmodule Wobble.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :company_id, :integer
-    field :company_name, :string
 
     belongs_to :organisation, Wobble.Organisations.Organisation
 
@@ -42,7 +40,7 @@ defmodule Wobble.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :organisation_id, :company_id, :company_name])
+    |> cast(attrs, [:email, :password, :organisation_id])
     |> validate_required([:organisation_id])
     |> validate_email(opts)
     |> validate_password(opts)

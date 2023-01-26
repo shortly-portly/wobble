@@ -33,7 +33,7 @@
           field={{f, :company_id}}
           label={company.company.name}
           value={company.company_id}
-          default={@current_user.company_id}
+          default={assigns[:current_company_id] || nil}
         />
       <% end %>
     </div>

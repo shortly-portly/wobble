@@ -7,8 +7,9 @@ defmodule WobbleWeb.CompanyController do
   def index(conn, _params) do
     companies = CompanyUsers.list_companies_for_user(conn.assigns.current_user.id)
     changeset = CompanyUsers.change_company_user(%CompanyUser{})
+    current_company_id = get_session(conn,:current_company_id)
 
-    render(conn, :index, companies: companies, changeset: changeset)
+    render(conn, :index, companies: companies, current_company_id: current_company_id, changeset: changeset)
   end
 
   def update(conn, %{"company_user" => company_user}) do

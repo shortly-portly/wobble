@@ -67,14 +67,22 @@ defmodule WobbleWeb.Router do
   end
 
   scope "/", WobbleWeb do
-    pipe_through([:browser, :require_authenticated_user])
+    pipe_through([:browser, :require_authenticated_user, :simple_layout])
 
     get("/companies/select_company", CompanyController, :index)
     post("/companies/select_company", CompanyController, :update)
+  end
+
+  scope "/", WobbleWeb do
+    pipe_through([:browser, :require_authenticated_user])
+
     resources "/dead", DeadController
 
     live_session :require_authenticated_user,
-      on_mount: [{WobbleWeb.UserAuth, :ensure_authenticated}, {WobbleWeb.UserAuth, :mount_current_company}] do
+      on_mount: [
+        {WobbleWeb.UserAuth, :ensure_authenticated},
+        {WobbleWeb.UserAuth, :mount_current_company}
+      ] do
       live("/users", UserListLive, :index)
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email)
@@ -107,7 +115,10 @@ defmodule WobbleWeb.Router do
     get("/hello", HelloController, :index)
 
     live_session :require_company,
-      on_mount: [{WobbleWeb.UserAuth, :ensure_authenticated}, {WobbleWeb.UserAuth, :ensure_has_company}] do
+      on_mount: [
+        {WobbleWeb.UserAuth, :ensure_authenticated},
+        {WobbleWeb.UserAuth, :ensure_has_company}
+      ] do
       live("/users/register", UserRegistrationLive, :new)
       live("/simple", SimpleForm)
     end
