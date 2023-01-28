@@ -31,6 +31,7 @@ defmodule WobbleWeb.UserListLive do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
+
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Users")

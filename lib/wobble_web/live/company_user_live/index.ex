@@ -1,12 +1,13 @@
 defmodule WobbleWeb.CompanyUserLive.Index do
   use WobbleWeb, :live_view
 
+  alias Wobble.Accounts
   alias Wobble.CompanyUsers
   alias Wobble.CompanyUsers.CompanyUser
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :company_users, list_company_users())}
+    {:ok, build_user_lists(socket)}
   end
 
   @impl true
@@ -37,10 +38,48 @@ defmodule WobbleWeb.CompanyUserLive.Index do
     company_user = CompanyUsers.get_company_user!(id)
     {:ok, _} = CompanyUsers.delete_company_user(company_user)
 
-    {:noreply, assign(socket, :company_users, list_company_users())}
+    {:noreply, build_user_lists(socket)}
   end
 
-  defp list_company_users do
-    CompanyUsers.list_company_users()
+  def handle_event("add_user", %{"id" => id}, socket) do
+    {:ok, _} =
+      CompanyUsers.create_company_user(%{
+        user_id: id,
+        company_id: socket.assigns.current_company_id
+      })
+
+    {:noreply, build_user_lists(socket)}
+  end
+
+  def handle_event("remove_user", %{"id" => id}, socket) do
+    # Ensure we have at least one user
+    if Enum.count(socket.assigns.allocated_users) > 1 do
+      company_user = CompanyUsers.get_company_user!(id)
+      {:ok, _} = CompanyUsers.delete_company_user(company_user)
+      {:noreply, build_user_lists(socket)}
+    else
+      {:noreply,
+       build_user_lists(socket |> put_flash(:error, "A company must have at least one allocated user."))}
+    end
+  end
+
+  defp build_user_lists(socket) do
+    allocated_users = list_users_for_company(socket.assigns.current_company_id)
+
+    unallocated_users =
+      list_unassigned_users(socket.assigns.current_user.organisation_id, allocated_users)
+
+    socket
+    |> assign(:allocated_users, allocated_users)
+    |> assign(:unallocated_users, unallocated_users)
+  end
+
+  defp list_users_for_company(company_id) do
+    CompanyUsers.list_users_for_company(company_id)
+  end
+
+  defp list_unassigned_users(organisation_id, allocated_users) do
+    exclude_users = Enum.map(allocated_users, fn uc -> uc.user_id end)
+    Accounts.list_unassigned_users(organisation_id, exclude_users)
   end
 end

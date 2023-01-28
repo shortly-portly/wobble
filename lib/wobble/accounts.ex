@@ -29,6 +29,20 @@ defmodule Wobble.Accounts do
   end
 
   @doc """
+  Return a list of users for an organisation who aren't in the provided list.
+
+  Used to produce a list of users who haven't been assigned to a specific company.
+  """
+  def list_unassigned_users(organisation_id, exclude_users) do
+    from(
+      u in User,
+      where: u.organisation_id == ^organisation_id,
+      where: u.id not in ^exclude_users
+    )
+    |> Repo.all()
+  end
+
+  @doc """
   Gets a user by email.
 
   ## Examples

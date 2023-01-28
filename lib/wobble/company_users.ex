@@ -20,6 +20,23 @@ defmodule Wobble.CompanyUsers do
   def list_company_users() do
     Repo.all(CompanyUser)
   end
+  
+  @doc """
+  Returns a list of users associated with this company.
+
+  ## Examples
+
+      iex> list_users_for_company(123)
+      [%CompanyUser{}, ...]
+  """
+  def list_users_for_company(company_id) do
+    from(
+      cu in CompanyUser,
+      where: cu.company_id== ^company_id,
+      preload: [:user]
+    )
+    |> Repo.all() 
+  end
 
   @doc """
   Returns the list of companies associated with this user.

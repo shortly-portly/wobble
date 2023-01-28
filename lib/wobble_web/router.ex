@@ -100,12 +100,6 @@ defmodule WobbleWeb.Router do
       live("/organisation/:id", OrganisationLive.Show, :show)
       live("/organisation/:id/show/edit", OrganisationLive.Show, :edit)
 
-      live "/company_users", CompanyUserLive.Index, :index
-      live "/company_users/new", CompanyUserLive.Index, :new
-      live "/company_users/:id/edit", CompanyUserLive.Index, :edit
-
-      live "/company_users/:id", CompanyUserLive.Show, :show
-      live "/company_users/:id/show/edit", CompanyUserLive.Show, :edit
     end
   end
 
@@ -121,6 +115,13 @@ defmodule WobbleWeb.Router do
       ] do
       live("/users/register", UserRegistrationLive, :new)
       live("/simple", SimpleForm)
+
+      live "/company_users", CompanyUserLive.Index, :index
+      live "/company_users/new", CompanyUserLive.Index, :new
+      live "/company_users/:id/edit", CompanyUserLive.Index, :edit
+
+      live "/company_users/:id", CompanyUserLive.Show, :show
+      live "/company_users/:id/show/edit", CompanyUserLive.Show, :edit
     end
   end
 
