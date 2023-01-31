@@ -48,13 +48,15 @@ defmodule WobbleWeb.CompanyUserLive.Index do
         company_id: socket.assigns.current_company_id
       })
 
+
     {:noreply, build_user_lists(socket)}
   end
 
   def handle_event("remove_user", %{"id" => id}, socket) do
     # Ensure we have at least one user
     if Enum.count(socket.assigns.allocated_users) > 1 do
-      company_user = CompanyUsers.get_company_user!(id)
+
+      company_user = CompanyUsers.get_company_user_for_company!(id, socket.assigns.current_company_id)
       {:ok, _} = CompanyUsers.delete_company_user(company_user)
       {:noreply, build_user_lists(socket)}
     else
@@ -79,7 +81,7 @@ defmodule WobbleWeb.CompanyUserLive.Index do
   end
 
   defp list_unassigned_users(organisation_id, allocated_users) do
-    exclude_users = Enum.map(allocated_users, fn uc -> uc.user_id end)
+    exclude_users = Enum.map(allocated_users, fn u -> u.id end)
     Accounts.list_unassigned_users(organisation_id, exclude_users)
   end
 end

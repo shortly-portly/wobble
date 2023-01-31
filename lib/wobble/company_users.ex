@@ -6,6 +6,7 @@ defmodule Wobble.CompanyUsers do
   import Ecto.Query, warn: false
   alias Wobble.Repo
 
+  alias Wobble.Accounts.User
   alias Wobble.CompanyUsers.CompanyUser
 
   @doc """
@@ -27,13 +28,14 @@ defmodule Wobble.CompanyUsers do
   ## Examples
 
       iex> list_users_for_company(123)
-      [%CompanyUser{}, ...]
+      [%User{}, ...]
   """
   def list_users_for_company(company_id) do
     from(
-      cu in CompanyUser,
-      where: cu.company_id== ^company_id,
-      preload: [:user]
+      u in User,
+      join: cu in CompanyUser,
+      where: u.id == cu.user_id,
+      where: cu.company_id== ^company_id
     )
     |> Repo.all() 
   end

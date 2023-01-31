@@ -10,9 +10,14 @@
     </.header>
     <.table id="unallocated_users" rows={@unallocated_users}>
       <:col :let={unallocated_user} label="Email">
-        <span phx-click={JS.push("add_user", value: %{id: unallocated_user.id})}>
-          <%= unallocated_user.email %>
-        </span>
+        <.button
+          id={"add-#{unallocated_user.id}"}
+          phx-click={JS.push("add_user", value: %{id: unallocated_user.id})}
+        >
+          +
+        </.button>
+
+        <%= unallocated_user.email %>
       </:col>
     </.table>
   </div>
@@ -21,10 +26,14 @@
       Allocated User
     </.header>
     <.table id="allocated_users" rows={@allocated_users}>
-      <:col :let={company_user} label="Email">
-        <span phx-click={JS.push("remove_user", value: %{id: company_user.id})}>
-          <%= company_user.user.email %>
-        </span>
+      <:col :let={allocated_user} label="Email">
+        <.button
+          id={"remove-#{allocated_user.id}"}
+          phx-click={JS.push("remove_user", value: %{id: allocated_user.id})}
+        >
+          -
+        </.button>
+        <%= allocated_user.email %>
       </:col>
     </.table>
   </div>
