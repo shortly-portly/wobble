@@ -99,7 +99,6 @@ defmodule WobbleWeb.Router do
 
       live("/organisation/:id", OrganisationLive.Show, :show)
       live("/organisation/:id/show/edit", OrganisationLive.Show, :edit)
-
     end
   end
 
@@ -122,6 +121,13 @@ defmodule WobbleWeb.Router do
 
       live "/company_users/:id", CompanyUserLive.Show, :show
       live "/company_users/:id/show/edit", CompanyUserLive.Show, :edit
+
+      live "/report_categories", ReportCategoryLive.Index, :index
+      live "/report_categories/new", ReportCategoryLive.Index, :new
+      live "/report_categories/:id/edit", ReportCategoryLive.Index, :edit
+
+      live "/report_categories/:id", ReportCategoryLive.Show, :show
+      live "/report_categories/:id/show/edit", ReportCategoryLive.Show, :edit
     end
   end
 

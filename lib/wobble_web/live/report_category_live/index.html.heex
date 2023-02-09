@@ -1,0 +1,41 @@
+<.header>
+  Listing Report categories
+  <:actions>
+    <.link patch={~p"/report_categories/new"}>
+      <.button>New Report category</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="report_categories" rows={@report_categories} row_click={&JS.navigate(~p"/report_categories/#{&1}")}>
+  <:col :let={report_category} label="Code"><%= report_category.code %></:col>
+  <:col :let={report_category} label="Name"><%= report_category.name %></:col>
+  <:action :let={report_category}>
+    <div class="sr-only">
+      <.link navigate={~p"/report_categories/#{report_category}"}>Show</.link>
+    </div>
+    <.link patch={~p"/report_categories/#{report_category}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={report_category}>
+    <.link phx-click={JS.push("delete", value: %{id: report_category.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="report_category-modal"
+  show
+  on_cancel={JS.navigate(~p"/report_categories")}
+>
+  <.live_component
+    module={WobbleWeb.ReportCategoryLive.FormComponent}
+    id={@report_category.id || :new}
+    title={@page_title}
+    action={@live_action}
+    report_category={@report_category}
+    current_company_id={@current_company_id}
+    navigate={~p"/report_categories"}
+  />
+</.modal>

@@ -676,6 +676,10 @@ defmodule WobbleWeb.CoreComponents do
             <.menu_item to="/companies/new" name="Create" />
             <.menu_item to="/companies" name="List" />
           </.menu_group>
+          <.menu_group title="Report Categories" id="report-categories-menu">
+            <.menu_item to="/report_categories/new" name="Create" />
+            <.menu_item to="/report_categories" name="List" />
+          </.menu_group>
           <.menu_group title="User" id="wobble">
             <.menu_item to="/users/register" name="Create" />
             <.menu_item to="/users" name="List" />

@@ -31,7 +31,7 @@ body {
 .sidebar {
   overflow-x: hidden;
   transition: width 1s;
-  width: 12%;
+  width: 15%;
 }
 
 #content {

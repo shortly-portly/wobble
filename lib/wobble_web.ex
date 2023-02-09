@@ -91,7 +91,7 @@ defmodule WobbleWeb do
 
   defp html_helpers do
     quote do
-      # HTML escaping functionality
+      # HTML escaping functionalityL
       import Phoenix.HTML
       # Core UI components and translation
       import WobbleWeb.CoreComponents
