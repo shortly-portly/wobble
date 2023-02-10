@@ -6,7 +6,7 @@ defmodule WobbleWeb.ReportCategoryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :report_categories, list_report_categories())}
+    {:ok, assign(socket, :report_categories, list_report_categories(socket.assigns.current_company_id))}
   end
 
   @impl true
@@ -37,10 +37,10 @@ defmodule WobbleWeb.ReportCategoryLive.Index do
     report_category = ReportCategories.get_report_category!(id)
     {:ok, _} = ReportCategories.delete_report_category(report_category)
 
-    {:noreply, assign(socket, :report_categories, list_report_categories())}
+    {:noreply, assign(socket, :report_categories, list_report_categories(socket.assigns.current_company_id))}
   end
 
-  defp list_report_categories do
-    ReportCategories.list_report_categories()
+  defp list_report_categories(company_id) do
+    ReportCategories.list_report_categories(company_id)
   end
 end

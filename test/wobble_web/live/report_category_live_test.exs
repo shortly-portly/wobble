@@ -4,6 +4,7 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
   import Phoenix.LiveViewTest
   import Wobble.AccountsFixtures
   import Wobble.CompaniesFixtures
+  import Wobble.OrganisationsFixtures
   import Wobble.ReportCategoriesFixtures
 
   @create_attrs %{
@@ -73,7 +74,11 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
       assert html =~ "some name"
     end
 
-    test "updates report_category in listing", %{conn: conn, user: user, report_category: report_category} do
+    test "updates report_category in listing", %{
+      conn: conn,
+      user: user,
+      report_category: report_category
+    } do
       conn = log_in_user(conn, user)
 
       {:ok, index_live, _html} =
@@ -101,8 +106,11 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
       assert html =~ "some updated name"
     end
 
-    test "deletes report_category in listing", %{conn: conn, user: user, report_category: report_category} do
-
+    test "deletes report_category in listing", %{
+      conn: conn,
+      user: user,
+      report_category: report_category
+    } do
       {:ok, index_live, _html} =
         conn
         |> log_in_user(user)
@@ -113,6 +121,40 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
              |> render_click()
 
       refute has_element?(index_live, "#report_category-#{report_category.id}")
+    end
+
+    test "does not list report categories that do not belong to the same organisation but different company", %{conn: conn, user: user} do
+
+      %{company: company2} =
+        company_fixture(user.id, %{organisation_id: user.organisation_id, name: "Company 2"})
+
+      report_category2 =
+        report_category_fixture(%{company_id: company2.id, name: "Rep Cat for Company 2"})
+
+      {:ok, _index_live, html} =
+        conn
+        |> log_in_user(user)
+        |> live(~p"/report_categories")
+
+      refute html =~ report_category2.name
+    end
+
+    test "does not list report categories that do not belong to the org + company", %{conn: conn, user: user} do
+      organisation2 = organisation_fixture(%{name: "Org 2"})
+      user2 = user_fixture(%{organisation_id: organisation2.id})
+
+      %{company: company2} =
+        company_fixture(user2.id, %{organisation_id: user2.organisation_id, name: "Company 2"})
+
+      report_category2 =
+        report_category_fixture(%{company_id: company2.id, name: "Rep Cat for Company 2"})
+
+      {:ok, _index_live, html} =
+        conn
+        |> log_in_user(user)
+        |> live(~p"/report_categories")
+
+      refute html =~ report_category2.name
     end
   end
 
@@ -129,9 +171,13 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
       assert html =~ report_category.name
     end
 
-    test "updates report_category within modal", %{conn: conn, user: user, report_category: report_category} do
+    test "updates report_category within modal", %{
+      conn: conn,
+      user: user,
+      report_category: report_category
+    } do
       conn = log_in_user(conn, user)
-      
+
       {:ok, show_live, _html} =
         conn
         |> live(~p"/report_categories/#{report_category}")

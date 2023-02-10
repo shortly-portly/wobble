@@ -9,6 +9,23 @@ defmodule Wobble.ReportCategories do
   alias Wobble.ReportCategories.ReportCategory
 
   @doc """
+  Returns the list of Report Categories associated with the given company id.
+
+  ## Examples
+
+      iex> list_companies()
+      [%Company{}, ...]
+
+  """
+  def list_report_categories(company_id) do
+    from(
+      c in ReportCategory,
+      where: c.company_id == ^company_id
+    )
+    |> Repo.all()
+  end
+
+  @doc """
   Returns the list of report_categories.
 
   ## Examples
