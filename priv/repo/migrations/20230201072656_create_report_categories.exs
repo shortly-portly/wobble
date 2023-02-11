@@ -22,5 +22,9 @@ defmodule Wobble.Repo.Migrations.CreateReportCategories do
 
       timestamps()
     end
+
+
+    create unique_index(:report_categories, [:code, :company_id])
+
   end
 end

@@ -10,6 +10,8 @@
 <.table id="report_categories" rows={@report_categories} row_click={&JS.navigate(~p"/report_categories/#{&1}")}>
   <:col :let={report_category} label="Code"><%= report_category.code %></:col>
   <:col :let={report_category} label="Name"><%= report_category.name %></:col>
+  <:col :let={report_category} label="Type"><%= report_category.report_type %></:col>
+  <:col :let={report_category} label="Category"><%= report_category.category_type %></:col>
   <:action :let={report_category}>
     <div class="sr-only">
       <.link navigate={~p"/report_categories/#{report_category}"}>Show</.link>

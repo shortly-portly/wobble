@@ -46,11 +46,33 @@ defmodule Wobble.ReportCategoriesTest do
       assert report_category.name == "some name"
     end
 
+    test "create_report_category/1 with duplicate code returns error changeset", %{
+      company: company
+    } do
+      valid_attrs = %{
+        code: 42,
+        name: "some name",
+        report_type: :"profit and loss",
+        category_type: :asset,
+        company_id: company.id
+      }
+
+      {:ok, _report_category1} = ReportCategories.create_report_category(valid_attrs)
+
+      {:error, changeset} = ReportCategories.create_report_category(valid_attrs)
+
+      assert %{
+               code: ["has already been taken"],
+             } = errors_on(changeset)
+    end
+
     test "create_report_category/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = ReportCategories.create_report_category(@invalid_attrs)
     end
 
-    test "update_report_category/2 with valid data updates the report_category", %{company: company} do
+    test "update_report_category/2 with valid data updates the report_category", %{
+      company: company
+    } do
       report_category = report_category_fixture(%{company_id: company.id})
       update_attrs = %{code: 43, name: "some updated name"}
 

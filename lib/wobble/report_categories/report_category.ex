@@ -20,5 +20,7 @@ defmodule Wobble.ReportCategories.ReportCategory do
     report_category
     |> cast(attrs, @valid_attrs)
     |> validate_required(@valid_attrs)
+    |> unsafe_validate_unique([:code, :company_id], Wobble.Repo)
+    |> unique_constraint([:code, :company_id])
   end
 end

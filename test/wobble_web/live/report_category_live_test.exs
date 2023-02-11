@@ -7,12 +7,6 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
   import Wobble.OrganisationsFixtures
   import Wobble.ReportCategoriesFixtures
 
-  @create_attrs %{
-    code: 42,
-    name: "some name",
-    report_type: :"profit and loss",
-    category_type: :asset
-  }
   @update_attrs %{code: 43, name: "some updated name"}
   @invalid_attrs %{code: nil, name: nil}
 
@@ -49,6 +43,13 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
     end
 
     test "saves new report_category", %{conn: conn, user: user} do
+      create_attrs = %{
+        code: 52,
+        name: "some name",
+        report_type: :"profit and loss",
+        category_type: :asset
+      }
+
       conn = log_in_user(conn, user)
 
       {:ok, index_live, _html} =
@@ -66,7 +67,7 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
 
       {:ok, _, html} =
         index_live
-        |> form("#report_category-form", report_category: @create_attrs)
+        |> form("#report_category-form", report_category: create_attrs)
         |> render_submit()
         |> follow_redirect(conn, ~p"/report_categories")
 
@@ -123,8 +124,8 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
       refute has_element?(index_live, "#report_category-#{report_category.id}")
     end
 
-    test "does not list report categories that do not belong to the same organisation but different company", %{conn: conn, user: user} do
-
+    test "does not list report categories that do not belong to the same organisation but different company",
+         %{conn: conn, user: user} do
       %{company: company2} =
         company_fixture(user.id, %{organisation_id: user.organisation_id, name: "Company 2"})
 
@@ -139,7 +140,10 @@ defmodule WobbleWeb.ReportCategoryLiveTest do
       refute html =~ report_category2.name
     end
 
-    test "does not list report categories that do not belong to the org + company", %{conn: conn, user: user} do
+    test "does not list report categories that do not belong to the org + company", %{
+      conn: conn,
+      user: user
+    } do
       organisation2 = organisation_fixture(%{name: "Org 2"})
       user2 = user_fixture(%{organisation_id: organisation2.id})
 
