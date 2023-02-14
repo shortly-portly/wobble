@@ -1,0 +1,42 @@
+<.header>
+  Listing Nominals
+  <:actions>
+    <.link patch={~p"/nominals/new"}>
+      <.button>New Nominal</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="nominals" rows={@nominals} row_click={&JS.navigate(~p"/nominals/#{&1}")}>
+  <:col :let={nominal} label="Code"><%= nominal.code %></:col>
+  <:col :let={nominal} label="Name"><%= nominal.name %></:col>
+  <:col :let={nominal} label="Balance"><%= nominal.balance %></:col>
+  <:action :let={nominal}>
+    <div class="sr-only">
+      <.link navigate={~p"/nominals/#{nominal}"}>Show</.link>
+    </div>
+    <.link patch={~p"/nominals/#{nominal}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={nominal}>
+    <.link phx-click={JS.push("delete", value: %{id: nominal.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="nominal-modal"
+  show
+  on_cancel={JS.navigate(~p"/nominals")}
+>
+  <.live_component
+    module={WobbleWeb.NominalLive.FormComponent}
+    id={@nominal.id || :new}
+    title={@page_title}
+    action={@live_action}
+    nominal={@nominal}
+    navigate={~p"/nominals"}
+    current_company_id={@current_company_id}
+  />
+</.modal>

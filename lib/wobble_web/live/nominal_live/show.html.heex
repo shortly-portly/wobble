@@ -1,0 +1,29 @@
+<.header>
+  Nominal <%= @nominal.id %>
+  <:subtitle>This is a nominal record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/nominals/#{@nominal}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit nominal</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Code"><%= @nominal.code %></:item>
+  <:item title="Name"><%= @nominal.name %></:item>
+  <:item title="Balance"><%= @nominal.balance %></:item>
+</.list>
+
+<.back navigate={~p"/nominals"}>Back to nominals</.back>
+
+<.modal :if={@live_action == :edit} id="nominal-modal" show on_cancel={JS.patch(~p"/nominals/#{@nominal}")}>
+  <.live_component
+    module={WobbleWeb.NominalLive.FormComponent}
+    id={@nominal.id}
+    title={@page_title}
+    action={@live_action}
+    nominal={@nominal}
+    current_company_id={@current_company_id}
+    navigate={~p"/nominals/#{@nominal}"}
+  />
+</.modal>

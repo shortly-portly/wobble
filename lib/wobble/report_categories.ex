@@ -13,14 +13,14 @@ defmodule Wobble.ReportCategories do
 
   ## Examples
 
-      iex> list_companies()
+      iex> list_report_categories(123)
       [%Company{}, ...]
 
   """
   def list_report_categories(company_id) do
     from(
-      c in ReportCategory,
-      where: c.company_id == ^company_id
+      rc in ReportCategory,
+      where: rc.company_id == ^company_id
     )
     |> Repo.all()
   end
@@ -36,6 +36,24 @@ defmodule Wobble.ReportCategories do
   """
   def list_report_categories do
     Repo.all(ReportCategory)
+  end
+
+  @doc """
+  Returns the list, suitable for use in a select component, of Report Categories associated with the given company id.
+
+  ## Examples
+
+      iex> select_report_categories(123)
+      [%Company{}, ...]
+
+  """
+  def select_report_categories(company_id) do
+    from(
+      rc in ReportCategory,
+      where: rc.company_id == ^company_id,
+      select: {rc.name, rc.id}
+    )
+    |> Repo.all()
   end
 
   @doc """

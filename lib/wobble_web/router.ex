@@ -128,6 +128,13 @@ defmodule WobbleWeb.Router do
 
       live "/report_categories/:id", ReportCategoryLive.Show, :show
       live "/report_categories/:id/show/edit", ReportCategoryLive.Show, :edit
+
+      live "/nominals", NominalLive.Index, :index
+      live "/nominals/new", NominalLive.Index, :new
+      live "/nominals/:id/edit", NominalLive.Index, :edit
+
+      live "/nominals/:id", NominalLive.Show, :show
+      live "/nominals/:id/show/edit", NominalLive.Show, :edit
     end
   end
 
