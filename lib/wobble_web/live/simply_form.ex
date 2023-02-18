@@ -1,13 +1,15 @@
 defmodule WobbleWeb.SimpleForm do
   use WobbleWeb, :live_view
 
+  import LiveSelect
+
   defmodule Form do
     use Ecto.Schema
     import Ecto.Changeset
 
     embedded_schema do
-      field :name, :string
-      field :age, :integer
+      field(:name, :string)
+      field(:age, :integer)
     end
 
     def changeset(form, params) do
@@ -22,13 +24,7 @@ defmodule WobbleWeb.SimpleForm do
       <div class="flex flex-col">
         <.input field={{f, :name}} type="text" label="name" />
         <.input field={{f, :age}} type="number" label="age" />
-        <.live_component module={WobbleWeb.ReportCategoryComponent} id="foo" field={{f, :wobble}} />
-        <.live_component
-          module={WobbleWeb.SelectComponent}
-          id="my-select"
-          field={{f, :foobar}}
-          options={@options}
-        />
+        <.live_select form={f} field={:city_search} options={@options}/>
       </div>
       <:actions>
         <.button phx-disable-with="Saving...">Save Simple Form</.button>
@@ -54,7 +50,7 @@ defmodule WobbleWeb.SimpleForm do
   def mount(_params, _session, socket) do
     form = %Form{}
     changeset = Form.changeset(%Form{}, %{})
-    options = [{1, 'Tea'}, {2, 'Cheese'}, {3, 'Lager'}]
+    options = [{'Tea', 1}, {'Cheese', 2}, {'Lager', 3}]
 
     socket =
       socket
@@ -74,5 +70,25 @@ defmodule WobbleWeb.SimpleForm do
       |> struct!(action: :validate)
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  @impl true
+  def handle_event("live_select_change", %{"text" => text, "id" => live_select_id}, socket) do
+    options = [{'Tea', 1}, {'Cheese', 2}, {'Lager', 3}, {'Table', 4}]
+
+    send_update(LiveSelect.Component, id: live_select_id, options: options)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event(
+        "change",
+        %{"my_form" => %{"city_search_text_input" => city_name, "city_search" => city_coords}},
+        socket
+      ) do
+    IO.puts("You selected city #{city_name} located at: #{city_coords}")
+
+    {:noreply, socket}
   end
 end
