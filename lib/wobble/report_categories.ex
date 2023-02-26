@@ -51,9 +51,9 @@ defmodule Wobble.ReportCategories do
     from(
       rc in ReportCategory,
       where: rc.company_id == ^company_id,
-      select: {rc.name, rc.id}
+      select: %{id: rc.id, name: rc.name, category: rc.category_type}
     )
-    |> Repo.all()
+    |> Repo.all() 
   end
 
   @doc """

@@ -24,7 +24,6 @@ defmodule WobbleWeb.NominalLive.FormComponent do
         <.input field={{f, :code}} type="text" label="code" />
         <.input field={{f, :name}} type="text" label="name" />
         <.input field={{f, :balance}} type="number" label="balance" />
-        <.input field={{f, :report_category_id}} type="select" label="Report Category" options={@report_categories}/>
         <:actions>
           <.button phx-disable-with="Saving...">Save Nominal</.button>
         </:actions>
