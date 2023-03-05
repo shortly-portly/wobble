@@ -24,6 +24,13 @@ defmodule WobbleWeb.NominalLive.FormComponent do
         <.input field={{f, :code}} type="text" label="code" />
         <.input field={{f, :name}} type="text" label="name" />
         <.input field={{f, :balance}} type="number" label="balance" />
+        <.live_component
+          module={WobbleWeb.RepCatSelect}
+          id="woobar"
+          field={{f, :report_category_id}}
+          label="Report Category"
+          current_company_id={@current_company_id}
+        />
         <:actions>
           <.button phx-disable-with="Saving...">Save Nominal</.button>
         </:actions>

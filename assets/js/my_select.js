@@ -3,13 +3,21 @@ let MySelect = {
     return this.el.querySelector('input[type=text]')
   },
 
+  hiddenField() {
+    return this.el.querySelector('input[type=hidden]')
+  },
+
   optionsContainer() {
     return document.getElementById(`${this.el.id}-options-container`)
   },
 
   closeDropdown() {
     this.optionsContainer().style.display = 'none'
-    this.removeHighlight()
+
+    // If there are no options then we won't have had a highlighted option to remove
+    if (this.options.length > 0) {
+      this.removeHighlight()
+    }
     this.option_index = -1
     this.show_dropdown = false
   },
@@ -27,6 +35,10 @@ let MySelect = {
 
   addHighlight() {
     this.options[this.option_index].classList.add('bg-red-300')
+    this.options[this.option_index].scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center',
+    })
   },
 
   prevOption() {
@@ -52,6 +64,7 @@ let MySelect = {
   selectOption() {
     if (this.show_dropdown) {
       this.pushEventTo(this.el, 'selected', {
+        component_id: this.el.id,
         id: this.options[this.option_index].dataset.id,
       })
 
@@ -60,19 +73,20 @@ let MySelect = {
   },
 
   updateOptions() {
-    console.log("Update Options")
     for (const option of this.options) {
       // Add mousedown rather than click event because we also have a blur event
       // which fires before click while mousedown fires before blur.
       option.addEventListener('mousedown', (elem) => {
+        console.log(elem.currentTarget)
         this.pushEventTo(this.el, 'selected', {
-          id: elem.target.dataset.id,
+          component_id: this.el,
+          id: elem.currentTarget.dataset.id,
         })
         if (this.show_dropdown) {
           this.closeDropdown()
         }
       })
-  }
+    }
   },
 
   init() {
@@ -91,7 +105,10 @@ let MySelect = {
     })
 
     this.textInput().addEventListener('blur', () => {
-      // Show or hide the list of options
+      // It is possible that the user hasn't entered a valid value.
+      // In which case lets get the last known good value from the server.
+      this.pushEventTo(this.el, 'blur', {})
+
       if (this.show_dropdown) {
         this.closeDropdown()
       }
@@ -110,6 +127,9 @@ let MySelect = {
           this.selectOption()
           break
         default:
+          if (!this.show_dropdown && this.options.length > 0) {
+            this.openDropdown()
+          }
           break
       }
     }
@@ -118,15 +138,18 @@ let MySelect = {
   mounted() {
     this.init()
 
-    this.handleEvent('select', ({ name }) => {
-      this.textInput().value = name
+    this.handleEvent('select', ({ component_id, selected_option }) => {
+      if (this.el.id == component_id) {
+        this.textInput().value = selected_option.name
+        this.hiddenField().value = selected_option.id
+      }
     })
   },
 
   updated() {
     this.options = document.getElementsByClassName(`${this.el.id}-option`)
     this.updateOptions()
-    if (this.options.length > 0) {
+    if (this.show_dropdown && this.options.length > 0) {
       this.openDropdown()
     }
   },

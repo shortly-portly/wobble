@@ -26,7 +26,13 @@ defmodule WobbleWeb.SimpleForm do
         <.input field={{f, :name}} type="text" label="name" />
         <.input field={{f, :address_line_1}} type="text" label="Address" />
 
-        <.live_component module={WobbleWeb.Simple} id="woobar" />
+        <.live_component
+          module={WobbleWeb.Simple}
+          id="woobar"
+          field={{f, :dog}}
+          label="Report Category"
+          current_company_id={@current_company_id}
+        />
         <.input field={{f, :address_line_2}} type="text" />
       </div>
       <:actions>
