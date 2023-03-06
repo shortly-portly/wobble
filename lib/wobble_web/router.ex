@@ -135,6 +135,13 @@ defmodule WobbleWeb.Router do
 
       live "/nominals/:id", NominalLive.Show, :show
       live "/nominals/:id/show/edit", NominalLive.Show, :edit
+
+      live "/transactions", TransactionLive.Index, :index
+      live "/transactions/new", TransactionLive.Index, :new
+      live "/transactions/:id/edit", TransactionLive.Index, :edit
+
+      live "/transactions/:id", TransactionLive.Show, :show
+      live "/transactions/:id/show/edit", TransactionLive.Show, :edit
     end
   end
 

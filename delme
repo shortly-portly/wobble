@@ -1,0 +1,64 @@
+to_form(changeset) #=> %Phoenix.HTML.Form{
+  source: #Ecto.Changeset<
+    action: nil,
+    changes: %{},
+    errors: [
+      name: {"can't be blank", [validation: :required]},
+      date: {"can't be blank", [validation: :required]}
+    ],
+    data: #Wobble.Transactions.Transaction<>,
+    valid?: false
+  >,
+  impl: Phoenix.HTML.FormData.Ecto.Changeset,
+  id: "transaction",
+  name: "transaction",
+  data: %Wobble.Transactions.Transaction{
+    __meta__: #Ecto.Schema.Metadata<:built, "transactions">,
+    id: nil,
+    date: nil,
+    name: nil,
+    company_id: nil,
+    company: #Ecto.Association.NotLoaded<association :company is not loaded>,
+    movements: #Ecto.Association.NotLoaded<association :movements is not loaded>,
+    inserted_at: nil,
+    updated_at: nil
+  },
+  hidden: [],
+  params: %{},
+  errors: [],
+  options: [method: "post"],
+  index: nil,
+  action: nil
+}
+
+
+to_form(changeset) #=> %Phoenix.HTML.Form{
+  source: #Ecto.Changeset<
+    action: nil,
+    changes: %{},
+    errors: [
+      name: {"can't be blank", [validation: :required]},
+      age: {"can't be blank", [validation: :required]}
+    ],
+    data: #Monday.Dogs.Dog<>,
+    valid?: false
+  >,
+  impl: Phoenix.HTML.FormData.Ecto.Changeset,
+  id: "dog",
+  name: "dog",
+  data: %Monday.Dogs.Dog{
+    __meta__: #Ecto.Schema.Metadata<:built, "dogs">,
+    id: nil,
+    age: nil,
+    name: nil,
+    inserted_at: nil,
+    updated_at: nil
+  },
+  hidden: [],
+  params: %{},
+  errors: [],
+  options: [method: "post"],
+  index: nil,
+  action: nil
+}
+
